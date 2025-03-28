@@ -1,26 +1,20 @@
 #pragma once
 
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <string>
 #include <vector>
+#include <string>
+#include <filesystem>
+#include <Common/EngineTypes.h>
+#include <Common/EngineEnums.h>
 
 namespace Util {
-    inline std::string ReadTextFromFile(std::string path) {
-        std::ifstream file(path);
-        std::string str;
-        std::string line;
-        while (std::getline(file, line)) {
-            str += line + "\n";
-        }
-        return str;
-    }
+    // FILE
+    std::string ReadTextFromFile(std::string path);
+    std::string GetFullPath(const std::filesystem::directory_entry& entry);
+    std::string GetFileName(const std::filesystem::directory_entry& entry);
+    std::string GetFileNameWithoutExtension(const std::filesystem::directory_entry& entry);
+    std::string GetFileExtension(const std::filesystem::directory_entry& entry);
+    std::vector<FileInfo> IterateDirectory(const std::string& directory, std::vector<std::string> extensions = {});
 
-    inline bool StrCmp(const char* queryA, const char* queryB) {
-        if (strcmp(queryA, queryB) == 0)
-            return true;
-        else
-            return false;
-    }
+    // TEXT
+    bool StrCmp(const char* queryA, const char* queryB);
 }

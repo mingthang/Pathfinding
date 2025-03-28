@@ -12,9 +12,9 @@ int main()
 	while (BackEnd::WindowIsOpen()) {
 		BackEnd::BeginFrame();
 
-		// Load
+		// Render Loading Screen
 		
-		// Renderer
+		// Update/Render Game
 
 		BackEnd::EndFrame();
 	}

@@ -136,19 +136,38 @@
     <ClCompile Include="src\API\OpenGL\GL_backEnd.cpp" />
     <ClCompile Include="src\API\OpenGL\GL_renderer.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_shader.cpp" />
+    <ClCompile Include="src\API\OpenGL\Types\GL_texture.cpp" />
+    <ClCompile Include="src\AssetManager\AssetManager_texture.cpp" />
     <ClCompile Include="src\BackEnd\BackEnd.cpp" />
     <ClCompile Include="src\BackEnd\GLFWIntegration.cpp" />
     <ClCompile Include="src\Common\EngineEnums.h" />
+    <ClCompile Include="src\AssetManager\AssetManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Renderer\Types\Texture.cpp" />
+    <ClCompile Include="src\UI\FontSpriteSheet.cpp" />
+    <ClCompile Include="src\UI\Mesh2D.cpp" />
+    <ClCompile Include="src\UI\TextBlitter.cpp" />
+    <ClCompile Include="src\UI\UIBackEnd.cpp" />
+    <ClCompile Include="src\Util\Util_file.cpp" />
+    <ClCompile Include="src\Util\Util_text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\API\OpenGL\GL_backEnd.h" />
     <ClInclude Include="src\API\OpenGL\GL_renderer.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_framebuffer.h" />
+    <ClInclude Include="src\API\OpenGL\Types\GL_mesh2D.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_shader.h" />
+    <ClInclude Include="src\API\OpenGL\Types\GL_texture.h" />
     <ClInclude Include="src\BackEnd\BackEnd.h" />
     <ClInclude Include="src\BackEnd\GLFWIntegration.h" />
+    <ClInclude Include="src\AssetManager\AssetManager.h" />
+    <ClInclude Include="src\Common\EngineTypes.h" />
     <ClInclude Include="src\Renderer\RendererCommon.h" />
+    <ClInclude Include="src\Renderer\Types\Texture.h" />
+    <ClInclude Include="src\UI\FontSpriteSheet.h" />
+    <ClInclude Include="src\UI\Mesh2D.h" />
+    <ClInclude Include="src\UI\TextBlitter.h" />
+    <ClInclude Include="src\UI\UIBackEnd.h" />
     <ClInclude Include="src\Util\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
