@@ -10,8 +10,26 @@ struct OpenGLTexture {
 public:
 	OpenGLTexture() = default;
 
-	GLuint& GetHandle();
     void AllocateMemory(int width, int height, int format, int internalFormat, int mipmapLevelCount);
+    void MakeBindlessTextureResident();
+    void MakeBindlessTextureNonResident();
+    
+    // SET
+    void SetWrapMode(TextureWrapMode wrapMode);
+    void SetMinFilter(TextureFilter filter);
+    void SetMagFilter(TextureFilter filter);
+
+    // GET
+	GLuint& GetHandle();
+    GLuint64 GetBindlessID();
+    int GetWidth();
+    int GetHeight();
+    int GetChannelCount();
+    int GetDataSize();
+    void* GetData();
+    GLint GetFormat();
+    GLint GetInternalFormat();
+    GLint GetMipmapLevelCount();
 
 private:
     GLuint m_handle = 0;

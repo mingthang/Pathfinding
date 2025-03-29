@@ -1,5 +1,7 @@
 #include "UIBackEnd.h"
 #include "TextBlitter.h"
+#include <AssetManager/AssetManager.h>
+#include <iostream>
 
 namespace UIBackEnd {
 	Mesh2D g_uiMesh;
@@ -20,4 +22,25 @@ namespace UIBackEnd {
 		TextBlitter::AddFont(REFont);
 	}
 
+	void BlitText(const std::string& text, const std::string& fontName, int originX, int originY, Alignment alignment, float scale, TextureFilter textureFilter = TextureFilter::NEAREST) {
+		FontSpriteSheet* fontSpriteSheet = TextBlitter::GetFontSpriteSheet(fontName);
+		if (!fontSpriteSheet) {
+			std::cout << "UIBackEnd::BlitText() failed to find " << fontName << "\n";
+			return;
+		}
+		int baseVertex = g_vertices.size();
+
+		const Resolutions& resolutions = Config::GetResolutions();
+
+		MeshData2D meshData = TextBlitter::BlitText(text, fontName, originX, originY, resolutions.ui, alignment, scale, baseVertex);
+		g_vertices.insert(std::end(g_vertices), std::begin(meshData.vertices), std::end(meshData.vertices));
+		g_indices.insert(std::end(g_indices), std::begin(meshData.indices), std::end(meshData.indices));
+
+		UIRenderItem& renderItem = g_renderItems.emplace_back();
+		renderItem.baseVertex = 0;
+		renderItem.baseIndex = g_indices.size() - meshData.indices.size();
+		renderItem.indexCount = meshData.indices.size();
+		renderItem.textureIndex = AssetManager::GetTextureIndexByName(fontName);
+		renderItem.filter = (textureFilter == TextureFilter::NEAREST) ? 1 : 0;
+	}
 }

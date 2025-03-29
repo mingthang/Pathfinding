@@ -1,6 +1,7 @@
 #include "Util.h"
 
 #include <fstream>
+#include <sys/stat.h>
 
 namespace Util {
 
@@ -34,6 +35,11 @@ namespace Util {
             }
         }
         return fileInfoList;
+    }
+
+    bool FileExists(const std::string_view name) {
+        struct stat buffer;
+        return (stat(name.data(), &buffer) == 0);
     }
 
     std::string ReadTextFromFile(std::string path) {

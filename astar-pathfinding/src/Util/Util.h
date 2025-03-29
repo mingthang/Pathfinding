@@ -14,6 +14,7 @@ namespace Util {
     std::string GetFileNameWithoutExtension(const std::filesystem::directory_entry& entry);
     std::string GetFileExtension(const std::filesystem::directory_entry& entry);
     std::vector<FileInfo> IterateDirectory(const std::string& directory, std::vector<std::string> extensions = {});
+    bool FileExists(const std::string_view name);
 
     // TEXT
     bool StrCmp(const char* queryA, const char* queryB);

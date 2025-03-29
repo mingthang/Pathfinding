@@ -1,4 +1,5 @@
 #include "GL_texture.h"
+#include <glad/glad.h>
 
 void OpenGLTexture::AllocateMemory(int width, int height, int format, int internalFormat, int mipmapLevelCount) {
 	if (m_memoryAllocated)
@@ -25,4 +26,18 @@ void OpenGLTexture::AllocateMemory(int width, int height, int format, int intern
 	}
 
 	m_memoryAllocated = true;
+}
+
+void OpenGLTexture::MakeBindlessTextureResident() {
+	if (m_bindlessID == 0) {
+		m_bindlessID = glGetTextureHandleARB(m_handle);
+	}
+	glMakeTextureHandleResidentARB(m_bindlessID);
+}
+
+void OpenGLTexture::MakeBindlessTextureNonResident() {
+	if (m_bindlessID != 0) {
+		glMakeTextureHandleNonResidentARB(m_bindlessID);
+		m_bindlessID = 0;
+	}
 }

@@ -2,6 +2,8 @@
 #include "GLFWIntegration.h"
 #include <API/OpenGL/GL_backEnd.h>
 #include <API/OpenGL/GL_renderer.h>
+#include <AssetManager/AssetManager.h>
+#include <UI/UIBackEnd.h>
 
 namespace BackEnd {
 
@@ -17,10 +19,19 @@ namespace BackEnd {
 		// OpenGL Backend
 		OpenGLBackEnd::Init();
 		OpenGLRenderer::Init();
+
+		AssetManager::Init();
+		UIBackEnd::Init();
+
+		// Init sub-systems
 	}
 
 	void BeginFrame() {
 		GLFWIntegration::BeginFrame();
+	}
+
+	void UpdateSubSystems() {
+
 	}
 
 	void EndFrame() {

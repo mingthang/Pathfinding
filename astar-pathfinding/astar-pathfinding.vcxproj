@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="src\API\OpenGL\GL_backEnd.cpp" />
     <ClCompile Include="src\API\OpenGL\GL_renderer.cpp" />
+    <ClCompile Include="src\API\OpenGL\GL_util.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_shader.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_texture.cpp" />
     <ClCompile Include="src\AssetManager\AssetManager_texture.cpp" />
@@ -142,8 +143,10 @@
     <ClCompile Include="src\BackEnd\GLFWIntegration.cpp" />
     <ClCompile Include="src\Common\EngineEnums.h" />
     <ClCompile Include="src\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="src\Config\Config.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Renderer\Types\Texture.cpp" />
+    <ClCompile Include="src\Tools\ImageTools.cpp" />
     <ClCompile Include="src\UI\FontSpriteSheet.cpp" />
     <ClCompile Include="src\UI\Mesh2D.cpp" />
     <ClCompile Include="src\UI\TextBlitter.cpp" />
@@ -154,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="src\API\OpenGL\GL_backEnd.h" />
     <ClInclude Include="src\API\OpenGL\GL_renderer.h" />
+    <ClInclude Include="src\API\OpenGL\GL_util.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_framebuffer.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_mesh2D.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_shader.h" />
@@ -162,8 +166,10 @@
     <ClInclude Include="src\BackEnd\GLFWIntegration.h" />
     <ClInclude Include="src\AssetManager\AssetManager.h" />
     <ClInclude Include="src\Common\EngineTypes.h" />
+    <ClInclude Include="src\Config\Config.h" />
     <ClInclude Include="src\Renderer\RendererCommon.h" />
     <ClInclude Include="src\Renderer\Types\Texture.h" />
+    <ClInclude Include="src\Tools\ImageTools.h" />
     <ClInclude Include="src\UI\FontSpriteSheet.h" />
     <ClInclude Include="src\UI\Mesh2D.h" />
     <ClInclude Include="src\UI\TextBlitter.h" />

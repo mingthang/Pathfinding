@@ -1,4 +1,5 @@
 #include "BackEnd/BackEnd.h"
+#include <AssetManager/AssetManager.h>
 #include <iostream>
 
 int main()
@@ -13,8 +14,17 @@ int main()
 		BackEnd::BeginFrame();
 
 		// Render Loading Screen
-		
+		if (!AssetManager::LoadingComplete()) {
+			AssetManager::UpdateLoading();
+			// renderer loading screen
+
+			//if(AssetManager::LoadingComplete())
+		}
 		// Update/Render Game
+		else {
+			BackEnd::UpdateGame();
+			//Renderer::
+		}
 
 		BackEnd::EndFrame();
 	}

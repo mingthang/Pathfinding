@@ -22,9 +22,26 @@ struct Vertex2D {
     int textureIndex;
 };
 
+struct TextureData {
+    int m_width = 0;
+    int m_height = 0;
+    int m_channelCount = 0;
+    int m_dataSize = 0;
+    int m_format = 0;
+    int m_internalFormat = 0;
+    void* m_data = nullptr;
+    ImageDataType m_imageDataType;
+};
+
 struct MeshData2D {
     std::vector<Vertex2D> vertices;
     std::vector<uint32_t> indices;
+};
+
+struct Resolutions {
+    glm::ivec2 gBuffer;
+    glm::ivec2 finalImage;
+    glm::ivec2 ui;
 };
 
 struct FileInfo {
