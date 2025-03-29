@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "EngineEnums.h"
+#include <vector>
+#include <string>
 
 struct RenderItem2D {
     glm::mat4 modelMatrix = glm::mat4(1);
