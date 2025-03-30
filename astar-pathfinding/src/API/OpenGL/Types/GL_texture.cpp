@@ -1,4 +1,5 @@
 #include "GL_texture.h"
+#include <API/OpenGL/GL_util.h>
 #include <glad/glad.h>
 
 void OpenGLTexture::AllocateMemory(int width, int height, int format, int internalFormat, int mipmapLevelCount) {
@@ -40,4 +41,52 @@ void OpenGLTexture::MakeBindlessTextureNonResident() {
 		glMakeTextureHandleNonResidentARB(m_bindlessID);
 		m_bindlessID = 0;
 	}
+}
+
+void OpenGLTexture::SetWrapMode(TextureWrapMode wrapMode) {
+	glTextureParameteri(m_handle, GL_TEXTURE_WRAP_S, OpenGLUtil::TextureWrapModeToGLEnum(wrapMode));
+	glTextureParameteri(m_handle, GL_TEXTURE_WRAP_T, OpenGLUtil::TextureWrapModeToGLEnum(wrapMode));
+}
+
+void OpenGLTexture::SetMinFilter(TextureFilter filter) {
+	glTextureParameteri(m_handle, GL_TEXTURE_MIN_FILTER, OpenGLUtil::TextureFilterToGLEnum(filter));
+}
+
+void OpenGLTexture::SetMagFilter(TextureFilter filter) {
+	glTextureParameteri(m_handle, GL_TEXTURE_MAG_FILTER, OpenGLUtil::TextureFilterToGLEnum(filter));
+}
+
+GLuint& OpenGLTexture::GetHandle() {
+	return m_handle;
+}
+
+int OpenGLTexture::GetWidth() {
+	return m_width;
+}
+
+int OpenGLTexture::GetHeight() {
+	return m_height;
+}
+
+int OpenGLTexture::GetChannelCount() {
+	return m_channelCount;
+}
+
+int OpenGLTexture::GetDataSize() {
+	return m_dataSize;
+}
+
+void* OpenGLTexture::GetData() {
+	return m_data;
+}
+
+GLint OpenGLTexture::GetFormat() {
+	return m_format;
+}
+GLint OpenGLTexture::GetInternalFormat() {
+	return m_internalFormat;
+}
+
+GLint OpenGLTexture::GetMipmapLevelCount() {
+	return m_mipmapLevelCount;
 }

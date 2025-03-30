@@ -100,4 +100,8 @@ namespace AssetManager {
     std::vector<Texture>& GetTextures() {
         return g_textures;
     }
+
+    std::unordered_map<std::string, int>& GetTextureIndexMap() {
+        return g_textureIndexMap;
+    }
 }

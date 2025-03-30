@@ -9,7 +9,7 @@ namespace AssetManager {
 	void Init();
 	void UpdateLoading();
 	bool LoadingComplete();
-	void AddItemToLoadLog(std::string text);
+	//void AddItemToLoadLog(std::string text);
 	std::vector<std::string>& GetLoadLog();
 
 	// Loading

@@ -21,7 +21,7 @@ namespace Util {
         return entry.path().extension().string().substr(1);
     }
 
-    std::vector<FileInfo> IterateDirectory(const std::string& directory, std::vector<std::string> extensions = {}) {
+    std::vector<FileInfo> IterateDirectory(const std::string& directory, std::vector<std::string> extensions) {
         std::vector<FileInfo> fileInfoList;
         if (!std::filesystem::exists(directory)) return fileInfoList;
 

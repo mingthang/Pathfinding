@@ -38,7 +38,7 @@ namespace UIBackEnd {
 		g_indices.clear();
 	}
 
-	void BlitText(const std::string& text, const std::string& fontName, int originX, int originY, Alignment alignment, float scale, TextureFilter textureFilter = TextureFilter::NEAREST) {
+	void BlitText(const std::string& text, const std::string& fontName, int originX, int originY, Alignment alignment, float scale, TextureFilter textureFilter) {
 		// Check if font spritesheet avaliable
 		FontSpriteSheet* fontSpriteSheet = TextBlitter::GetFontSpriteSheet(fontName);
 		if (!fontSpriteSheet) {

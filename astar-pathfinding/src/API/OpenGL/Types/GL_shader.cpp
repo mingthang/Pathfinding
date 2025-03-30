@@ -6,6 +6,13 @@
 #include <filesystem>
 #include <Util/Util.h>
 
+void ParseFile(const std::string& filepath, std::string& outputString, std::vector<std::string>& lineToFile, std::vector<std::string>& includedPaths);
+int GetErrorLineNumber(const std::string& error);
+std::string GetErrorMessage(const std::string& line);
+std::string GetLinkingErrors(unsigned int shader);
+std::string GetShaderCompileErrors(unsigned int shader, const std::string& filename, const std::vector<std::string>& lineToFile);
+
+
 // OPENGL SHADER
 OpenGLShader::OpenGLShader(std::vector<std::string> shaderPaths) {
     m_shaderPaths = shaderPaths;
@@ -189,12 +196,6 @@ int OpenGLShader::GetHandle() {
 }
 
 // OpenGLShaderModule
-void ParseFile(const std::string& filepath, std::string& outputString, std::vector<std::string>& lineToFile, std::vector<std::string>& includedPaths);
-int GetErrorLineNumber(const std::string& error);
-std::string GetErrorMessage(const std::string& line);
-std::string GetLinkingErrors(unsigned int shader);
-std::string GetShaderCompileErrors(unsigned int shader, const std::string& filename, const std::vector<std::string>& lineToFile);
-
 OpenGLShaderModule::OpenGLShaderModule(const std::string& filename) {
     // Parse the source code
     std::vector<std::string> lineMap;

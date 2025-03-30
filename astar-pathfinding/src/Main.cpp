@@ -23,7 +23,7 @@ int main()
 		}
 		// Update/Render Game
 		else {
-			BackEnd::UpdateGame();
+			//BackEnd::UpdateGame();
 			//Renderer::
 		}
 

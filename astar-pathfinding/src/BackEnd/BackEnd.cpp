@@ -4,6 +4,7 @@
 #include <API/OpenGL/Renderer/GL_renderer.h>
 #include <AssetManager/AssetManager.h>
 #include <UI/UIBackEnd.h>
+#include <Core/Input/Input.h>
 
 namespace BackEnd {
 
@@ -24,6 +25,7 @@ namespace BackEnd {
 		UIBackEnd::Init();
 
 		// Init sub-systems
+		Input::Init(BackEnd::GetWindowPointer());
 
 		glfwShowWindow(static_cast<GLFWwindow*>(BackEnd::GetWindowPointer()));
 		return true;

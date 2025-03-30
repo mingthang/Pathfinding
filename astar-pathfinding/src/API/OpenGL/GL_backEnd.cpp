@@ -1,5 +1,6 @@
 #include "GL_backEnd.h"
 #include "GL_util.h"
+#include <BackEnd/GLFWIntegration.h>
 #include <iostream>
 
 namespace OpenGLBackEnd {
@@ -14,6 +15,9 @@ namespace OpenGLBackEnd {
 
     // CORE
     void Init() {
+
+        GLFWIntegration::MakeContextCurrent();
+
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
             std::cout << "GL_backEnd() failed to intialize GLAD.\n";
             return;

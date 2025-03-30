@@ -15,7 +15,7 @@ namespace AssetManager {
 		}
 	}
 
-	void LoadPeningTextureAsync() {
+	void LoadPendingTexturesAsync() {
 		std::vector<Texture>& textures = GetTextures();
 		std::vector<std::future<void> > futures;
 
@@ -65,7 +65,7 @@ namespace AssetManager {
 		return nullptr;
 	}
 
-	int GetTextureIndexByName(const std::string& name, bool ignoreWarning = true) {
+	int GetTextureIndexByName(const std::string& name, bool ignoreWarning) {
 		std::unordered_map<std::string, int>& indexMap = GetTextureIndexMap();
 		auto it = indexMap.find(name);
 		if (it != indexMap.end()) {

@@ -144,3 +144,27 @@ GLuint OpenGLFrameBuffer::GetWidth() const {
 GLuint OpenGLFrameBuffer::GetHeight() const {
     return m_height;
 }
+
+GLuint OpenGLFrameBuffer::GetColorAttachmentHandleByName(const char* name) const {
+    for (int i = 0; i < m_colorAttachments.size(); i++) {
+        if (Util::StrCmp(name, m_colorAttachments[i].name)) {
+            return m_colorAttachments[i].handle;
+        }
+    }
+    std::cerr << "GetColorAttachmentHandleByName() with name '" << name << "' failed. Name does not exist in FrameBuffer '" << this->m_name << "'\n";
+    return GL_NONE;
+}
+
+GLuint OpenGLFrameBuffer::GetDepthAttachmentHandle() const {
+    return m_depthAttachment.handle;
+}
+
+GLenum OpenGLFrameBuffer::GetColorAttachmentSlotByName(const char* name) const {
+    for (int i = 0; i < m_colorAttachments.size(); i++) {
+        if (Util::StrCmp(name, m_colorAttachments[i].name)) {
+            return GL_COLOR_ATTACHMENT0 + i;
+        }
+    }
+    std::cerr << "GetColorAttachmentSlotByName() with name '" << name << "' failed. Name does not exist in FrameBuffer '" << this->m_name << "'\n";
+    return GL_INVALID_VALUE;
+}

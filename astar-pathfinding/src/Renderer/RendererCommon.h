@@ -6,27 +6,11 @@
 
 #define MAX_RENDER_OBJECTS_2D 4096
 
-enum Alignment {
-    CENTERED,
-    TOP_LEFT,
-    TOP_RIGHT,
-    BOTTOM_LEFT,
-    BOTTOM_RIGHT
-};
-
 struct ViewportInfo {
     int width = 0;
     int height = 0;
     int xOffset = 0;
     int yOffset = 0;
-};
-
-struct RenderItem2D {
-    glm::mat4 modelMatrix = glm::mat4(1);
-    float colorTintR;
-    float colorTintG;
-    float colorTintB;
-    int textureIndex;
 };
 
 struct CameraData {

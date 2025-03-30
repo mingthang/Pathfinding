@@ -8,7 +8,6 @@ struct Texture {
 public:
 	Texture() = default;
 	void Load();
-	void RequestMipmaps();
 	void FreeCPUMemory();
 
 	void RequestMipmaps();
