@@ -134,8 +134,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\API\OpenGL\GL_backEnd.cpp" />
-    <ClCompile Include="src\API\OpenGL\GL_renderer.cpp" />
+    <ClCompile Include="src\API\OpenGL\Renderer\GL_renderer.cpp" />
     <ClCompile Include="src\API\OpenGL\GL_util.cpp" />
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_loading_screen.cpp" />
+    <ClCompile Include="src\API\OpenGL\Renderer\GL_renderer_util.cpp" />
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_UI_pass.cpp" />
+    <ClCompile Include="src\API\OpenGL\Types\GL_framebuffer.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_shader.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_texture.cpp" />
     <ClCompile Include="src\AssetManager\AssetManager_texture.cpp" />
@@ -144,7 +148,9 @@
     <ClCompile Include="src\Common\EngineEnums.h" />
     <ClCompile Include="src\AssetManager\AssetManager.cpp" />
     <ClCompile Include="src\Config\Config.cpp" />
+    <ClCompile Include="src\Core\Debug.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\Types\Texture.cpp" />
     <ClCompile Include="src\Tools\ImageTools.cpp" />
     <ClCompile Include="src\UI\FontSpriteSheet.cpp" />
@@ -156,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\API\OpenGL\GL_backEnd.h" />
-    <ClInclude Include="src\API\OpenGL\GL_renderer.h" />
+    <ClInclude Include="src\API\OpenGL\Renderer\GL_renderer.h" />
     <ClInclude Include="src\API\OpenGL\GL_util.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_framebuffer.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_mesh2D.h" />
@@ -167,6 +173,8 @@
     <ClInclude Include="src\AssetManager\AssetManager.h" />
     <ClInclude Include="src\Common\EngineTypes.h" />
     <ClInclude Include="src\Config\Config.h" />
+    <ClInclude Include="src\Core\Debug.h" />
+    <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\RendererCommon.h" />
     <ClInclude Include="src\Renderer\Types\Texture.h" />
     <ClInclude Include="src\Tools\ImageTools.h" />
@@ -175,6 +183,10 @@
     <ClInclude Include="src\UI\TextBlitter.h" />
     <ClInclude Include="src\UI\UIBackEnd.h" />
     <ClInclude Include="src\Util\Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\OpenGL\GL_ui.frag" />
+    <None Include="res\shaders\OpenGL\GL_ui.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

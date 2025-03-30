@@ -24,6 +24,15 @@ struct Vertex2D {
     int textureIndex;
 };
 
+#pragma pack(push, 1)
+struct DebugVertex {
+    glm::vec3 position;
+    glm::vec3 color;
+    glm::ivec2 pixelOffset;
+    int exclusiveViewportIndex = -1;
+};
+#pragma pack(pop)
+
 struct TextureData {
     int m_width = 0;
     int m_height = 0;

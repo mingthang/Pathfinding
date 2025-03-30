@@ -1,6 +1,7 @@
 #include "UIBackEnd.h"
 #include "TextBlitter.h"
 #include <AssetManager/AssetManager.h>
+#include <Config/Config.h>
 #include <iostream>
 
 namespace UIBackEnd {
@@ -22,7 +23,23 @@ namespace UIBackEnd {
 		TextBlitter::AddFont(REFont);
 	}
 
+	void Update() {
+
+		//if (Debug::IsDebugTextVisible()) {
+		//	BlitText(Debug::GetText(), "REFont", 0, 0, Alignment::TOP_LEFT, 2.0f);
+		//}
+
+		const Resolutions& resolutions = Config::GetResolutions();
+
+		// OPENGL API
+		g_uiMesh.GetGLMesh2D().UpdateVertexBuffer(g_vertices, g_indices);
+
+		g_vertices.clear();
+		g_indices.clear();
+	}
+
 	void BlitText(const std::string& text, const std::string& fontName, int originX, int originY, Alignment alignment, float scale, TextureFilter textureFilter = TextureFilter::NEAREST) {
+		// Check if font spritesheet avaliable
 		FontSpriteSheet* fontSpriteSheet = TextBlitter::GetFontSpriteSheet(fontName);
 		if (!fontSpriteSheet) {
 			std::cout << "UIBackEnd::BlitText() failed to find " << fontName << "\n";
@@ -42,5 +59,17 @@ namespace UIBackEnd {
 		renderItem.indexCount = meshData.indices.size();
 		renderItem.textureIndex = AssetManager::GetTextureIndexByName(fontName);
 		renderItem.filter = (textureFilter == TextureFilter::NEAREST) ? 1 : 0;
+	}
+
+	void EndFrame() {
+		g_renderItems.clear();
+	}
+
+	Mesh2D& GetUIMesh() {
+		return g_uiMesh;
+	}
+
+	std::vector<UIRenderItem>& GetRenderItems() {
+		return g_renderItems;
 	}
 }

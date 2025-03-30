@@ -3,114 +3,56 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Util/Util.h>
+#include <iostream>
 
 struct ColorAttachment {
     const char* name = "undefined";
-    GLenum internalFormat = GL_RGBA;
     GLuint handle = 0;
+    GLenum internalFormat = 0;;
+    GLenum format = 0;
+    GLenum type = 0;
 };
 
 struct DepthAttachment {
     GLuint handle = 0;
-    GLenum internalFormat = GL_RGBA;
+    GLenum internalFormat = 0;
 };
 
-struct GLFrameBuffer {
+class OpenGLFrameBuffer {
 
 private:
-    const char* name = "undefined";
-    GLuint handle = 0;
-    GLuint width = 0;
-    GLuint height = 0;
-    std::vector<ColorAttachment> colorAttachments;
-    DepthAttachment depthAttachment;
+    const char* m_name = "undefined";
+    GLuint m_handle = 0;
+    GLuint m_width = 0;
+    GLuint m_height = 0;
+    std::vector<ColorAttachment> m_colorAttachments;
+    DepthAttachment m_depthAttachment;
 
 public:
 
+    OpenGLFrameBuffer() = default;
+    OpenGLFrameBuffer(const char* name, int width, int height);
+    OpenGLFrameBuffer(const char* name, const glm::ivec2& resolution);
 
-    void Create(const char* name, int width, int height) {
-        glGenFramebuffers(1, &handle);
-        this->name = name;
-        this->width = width;
-        this->height = height;
-    }
+    void Create(const char* name, int width, int height);
+    void Create(const char* name, const glm::ivec2& resolution);
+    void CreateAttachment(const char* name, GLenum internalFormat, GLenum minFilter = GL_LINEAR, GLenum magFilter = GL_LINEAR);
+    void CreateDepthAttachment(GLenum internalFormat, GLenum minFilter = GL_LINEAR, GLenum magFilter = GL_LINEAR, GLint wrap = GL_CLAMP_TO_EDGE, glm::vec4 borderColor = glm::vec4(1.0f));
+    void Bind();
+    void BindDepthAttachmentFrom(const OpenGLFrameBuffer& srcFrameBuffer);
+    void SetViewport();
+    void CleanUp();
 
-    void CleanUp() {
-        colorAttachments.clear();
-        glDeleteFramebuffers(1, &handle);
-    }
+    void ClearAttachment(const char* attachmentName, GLfloat r, GLfloat g = 0.0f, GLfloat b = 0.0f, GLfloat a = 0.0f);
 
-    void CreateAttachment(const char* name, GLenum internalFormat) {
-        GLenum slot = GL_COLOR_ATTACHMENT0 + colorAttachments.size();
-        ColorAttachment& colorAttachment = colorAttachments.emplace_back();
-        colorAttachment.name = name;
-        colorAttachment.internalFormat = internalFormat;
-        glBindFramebuffer(GL_FRAMEBUFFER, handle);
-        glGenTextures(1, &colorAttachment.handle);
-        glBindTexture(GL_TEXTURE_2D, colorAttachment.handle);
-        glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, slot, GL_TEXTURE_2D, colorAttachment.handle, 0);
-    }
+    void DrawBuffers(std::vector<const char*> attachmentNames);
+    void DrawBuffer(const char* attachmentName);
 
-    void CreateDepthAttachment(GLenum internalFormat) {
-        depthAttachment.internalFormat = internalFormat;
-        glBindFramebuffer(GL_FRAMEBUFFER, handle);
-        glGenTextures(1, &depthAttachment.handle);
-        glBindTexture(GL_TEXTURE_2D, depthAttachment.handle);
-        glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment.handle, 0);
-    }
-
-    void Bind() {
-        glBindFramebuffer(GL_FRAMEBUFFER, handle);
-    }
-
-    void SetViewport() {
-        glViewport(0, 0, width, height);
-    }
-
-    GLuint GetHandle() {
-        return handle;
-    }
-
-    GLuint GetWidth() {
-        return width;
-    }
-
-    GLuint GetHeight() {
-        return height;
-    }
-
-    GLuint GetColorAttachmentHandleByName(const char* name) {
-        for (int i = 0; i < colorAttachments.size(); i++) {
-            if (Util::StrCmp(name, colorAttachments[i].name)) {
-                return colorAttachments[i].handle;
-            }
-        }
-        std::cout << "GetColorAttachmentHandleByName() with name '" << name << "' failed. Name does not exist in FrameBuffer '" << this->name << "'\n";
-        return GL_NONE;
-    }
-
-    GLuint GetDepthAttachmentHandle() {
-        return depthAttachment.handle;
-    }
-
-    GLenum GetColorAttachmentSlotByName(const char* name) {
-        for (int i = 0; i < colorAttachments.size(); i++) {
-            if (Util::StrCmp(name, colorAttachments[i].name)) {
-                return GL_COLOR_ATTACHMENT0 + i;
-            }
-        }
-        std::cout << "GetColorAttachmentHandleByName() with name '" << name << "' failed. Name does not exist in FrameBuffer '" << this->name << "'\n";
-        return GL_INVALID_VALUE;
-    }
-
+    void Resize(int width, int height);
+    GLuint GetHandle() const;
+    GLuint GetWidth() const;
+    GLuint GetHeight() const;
+    GLuint GetColorAttachmentHandleByName(const char* name) const;
+    GLuint GetDepthAttachmentHandle() const;
+    GLenum GetColorAttachmentSlotByName(const char* name) const;
 };

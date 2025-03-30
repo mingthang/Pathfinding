@@ -1,5 +1,6 @@
 #include "BackEnd/BackEnd.h"
 #include <AssetManager/AssetManager.h>
+#include <Renderer/Renderer.h>
 #include <iostream>
 
 int main()
@@ -16,7 +17,7 @@ int main()
 		// Render Loading Screen
 		if (!AssetManager::LoadingComplete()) {
 			AssetManager::UpdateLoading();
-			// renderer loading screen
+			Renderer::RenderLoadingScreen();
 
 			//if(AssetManager::LoadingComplete())
 		}

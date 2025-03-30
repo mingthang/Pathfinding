@@ -1,7 +1,7 @@
 #include "BackEnd.h"
 #include "GLFWIntegration.h"
 #include <API/OpenGL/GL_backEnd.h>
-#include <API/OpenGL/GL_renderer.h>
+#include <API/OpenGL/Renderer/GL_renderer.h>
 #include <AssetManager/AssetManager.h>
 #include <UI/UIBackEnd.h>
 
@@ -16,7 +16,7 @@ namespace BackEnd {
 			return false;
 		}
 
-		// OpenGL Backend
+		// OpenGL API
 		OpenGLBackEnd::Init();
 		OpenGLRenderer::Init();
 
@@ -24,25 +24,67 @@ namespace BackEnd {
 		UIBackEnd::Init();
 
 		// Init sub-systems
+
+		glfwShowWindow(static_cast<GLFWwindow*>(BackEnd::GetWindowPointer()));
+		return true;
 	}
 
 	void BeginFrame() {
 		GLFWIntegration::BeginFrame();
-	}
-
-	void UpdateSubSystems() {
-
+		//RenderDataManager::BeginFrame();
+		//OpenGLBackEnd::BeginFrame();
 	}
 
 	void EndFrame() {
 		GLFWIntegration::EndFrame();
 	}
 
-	bool WindowIsOpen() {
-		return GLFWIntegration::WindowIsOpen();
+	void UpdateSubSystems() {
+
 	}
 
 	void CleanUp() {
 		GLFWIntegration::Destroy();
+	}
+
+	// Window
+	const WindowedMode& GetWindowedMode() {
+		return GLFWIntegration::GetWindowedMode();
+	}
+
+	void SetWindowedMode(const WindowedMode& windowedMode) {
+		GLFWIntegration::SetWindowedMode(windowedMode);
+	}
+
+	void* GetWindowPointer() {
+		return GLFWIntegration::GetWindowPointer();;
+	}
+
+	bool WindowIsOpen() {
+		return GLFWIntegration::WindowIsOpen();
+	}
+
+	int GetWindowedWidth() {
+		return GLFWIntegration::GetWindowedWidth();
+	}
+
+	int GetWindowedHeight() {
+		return GLFWIntegration::GetWindowedHeight();
+	}
+
+	int GetCurrentWindowWidth() {
+		return GLFWIntegration::GetCurrentWindowWidth();
+	}
+
+	int GetCurrentWindowHeight() {
+		return GLFWIntegration::GetCurrentWindowHeight();
+	}
+
+	int GetFullScreenWidth() {
+		return GLFWIntegration::GetFullScreenWidth();
+	}
+
+	int GetFullScreenHeight() {
+		return GLFWIntegration::GetFullScreenHeight();
 	}
 }

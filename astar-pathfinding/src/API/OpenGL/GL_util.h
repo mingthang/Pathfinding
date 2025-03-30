@@ -11,4 +11,6 @@ namespace OpenGLUtil {
     // Engine Enums -> OpenGL translation
     GLint TextureWrapModeToGLEnum(TextureWrapMode wrapMode);
     GLint TextureFilterToGLEnum(TextureFilter filter);
+    GLenum GLInternalFormatToGLType(GLenum internalFormat);
+    GLenum GLInternalFormatToGLFormat(GLenum internalFormat);
 }

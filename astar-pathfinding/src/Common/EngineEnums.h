@@ -49,3 +49,8 @@ enum class TextureFilter {
     LINEAR_MIPMAP,
     UNDEFINED
 };
+
+enum DebugRenderMode {
+    NONE = 0,
+    DEBUG_LINE_MODE_COUNT
+};

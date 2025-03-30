@@ -1,0 +1,146 @@
+#include "GL_framebuffer.h"
+#include <API/OpenGL/GL_util.h>
+#include <Util/Util.h>
+
+OpenGLFrameBuffer::OpenGLFrameBuffer(const char* name, int width, int height) {
+    Create(name, width, height);
+}
+
+OpenGLFrameBuffer::OpenGLFrameBuffer(const char* name, const glm::ivec2& size) {
+    Create(name, size);
+}
+
+void OpenGLFrameBuffer::Create(const char* name, int width, int height) {
+    glCreateFramebuffers(1, &m_handle);
+    this->m_name = name;
+    this->m_width = width;
+    this->m_height = height;
+}
+
+void OpenGLFrameBuffer::Create(const char* name, const glm::ivec2& size) {
+    Create(name, size.x, size.y);
+}
+
+void OpenGLFrameBuffer::CreateAttachment(const char* name, GLenum internalFormat, GLenum minFilter, GLenum magFilter) {
+    ColorAttachment& colorAttachment = m_colorAttachments.emplace_back();
+    colorAttachment.name = name;
+    colorAttachment.internalFormat = internalFormat;
+    colorAttachment.format = OpenGLUtil::GLInternalFormatToGLFormat(internalFormat);
+    colorAttachment.type = OpenGLUtil::GLInternalFormatToGLType(internalFormat);
+    glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment.handle);
+    glTextureStorage2D(colorAttachment.handle, 1, internalFormat, m_width, m_height);
+    glTextureParameteri(colorAttachment.handle, GL_TEXTURE_MIN_FILTER, minFilter);
+    glTextureParameteri(colorAttachment.handle, GL_TEXTURE_MAG_FILTER, magFilter);
+    glTextureParameteri(colorAttachment.handle, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(colorAttachment.handle, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glNamedFramebufferTexture(m_handle, GL_COLOR_ATTACHMENT0 + m_colorAttachments.size() - 1, colorAttachment.handle, 0);
+    std::string debugLabel = "Texture (FBO: " + std::string(m_name) + " Tex: " + std::string(name) + ")";
+    glObjectLabel(GL_TEXTURE, colorAttachment.handle, static_cast<GLsizei>(debugLabel.length()), debugLabel.c_str());
+}
+
+void OpenGLFrameBuffer::CreateDepthAttachment(GLenum internalFormat, GLenum minFilter, GLenum magFilter, GLint wrap, glm::vec4 borderColor) {
+    m_depthAttachment.internalFormat = internalFormat;
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_depthAttachment.handle);
+    glTextureStorage2D(m_depthAttachment.handle, 1, internalFormat, m_width, m_height);
+    glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_MIN_FILTER, minFilter);
+    glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_MAG_FILTER, magFilter);
+    glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glNamedFramebufferTexture(m_handle, GL_DEPTH_ATTACHMENT, m_depthAttachment.handle, 0);
+    std::string debugLabel = "Texture (FBO: " + std::string(m_name) + " Tex: Depth)";
+    glObjectLabel(GL_TEXTURE, m_depthAttachment.handle, static_cast<GLsizei>(debugLabel.length()), debugLabel.c_str());
+}
+
+void OpenGLFrameBuffer::Bind() {
+    glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
+}
+
+void OpenGLFrameBuffer::BindDepthAttachmentFrom(const OpenGLFrameBuffer& srcFrameBuffer) {
+    glNamedFramebufferTexture(m_handle, GL_DEPTH_ATTACHMENT, srcFrameBuffer.m_depthAttachment.handle, 0);
+}
+
+void OpenGLFrameBuffer::SetViewport() {
+    glViewport(0, 0, m_width, m_height);
+}
+
+void OpenGLFrameBuffer::CleanUp() {
+    m_colorAttachments.clear();
+    glDeleteFramebuffers(1, &m_handle);
+    m_handle = 0;
+}
+
+void OpenGLFrameBuffer::ClearAttachment(const char* attachmentName, GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
+    for (int i = 0; i < m_colorAttachments.size(); i++) {
+        if (Util::StrCmp(attachmentName, m_colorAttachments[i].name)) {
+            GLuint texture = m_colorAttachments[i].handle;
+            GLenum internalFormat = m_colorAttachments[i].internalFormat;
+            GLenum format = m_colorAttachments[i].format;
+            GLenum type = m_colorAttachments[i].type;
+            GLfloat clearColor[4] = { r, g, b, a };
+            glClearTexSubImage(texture, 0, 0, 0, 0, GetWidth(), GetHeight(), 1, format, type, clearColor);
+            return;
+        }
+    }
+}
+
+void OpenGLFrameBuffer::DrawBuffers(std::vector<const char*> attachmentNames) {
+    std::vector<GLuint> attachments;
+    for (const char* attachmentName : attachmentNames) {
+        attachments.push_back(GetColorAttachmentSlotByName(attachmentName));
+    }
+    glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
+}
+
+void OpenGLFrameBuffer::DrawBuffer(const char* attachmentName) {
+    for (int i = 0; i < m_colorAttachments.size(); i++) {
+        if (Util::StrCmp(attachmentName, m_colorAttachments[i].name)) {
+            glDrawBuffer(GL_COLOR_ATTACHMENT0 + i);
+            return;
+        }
+    }
+}
+
+void OpenGLFrameBuffer::Resize(int width, int height) {
+    m_width = std::max(width, 1);
+    m_height = std::max(height, 1);
+
+    for (size_t i = 0; i < m_colorAttachments.size(); ++i) {
+        ColorAttachment& colorAttachment = m_colorAttachments[i];
+        glDeleteTextures(1, &colorAttachment.handle);
+        glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment.handle);
+        glTextureStorage2D(colorAttachment.handle, 1, colorAttachment.internalFormat, m_width, m_height);
+        glTextureParameteri(colorAttachment.handle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(colorAttachment.handle, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(colorAttachment.handle, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(colorAttachment.handle, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glNamedFramebufferTexture(m_handle, GL_COLOR_ATTACHMENT0 + static_cast<GLenum>(i), colorAttachment.handle, 0);
+        std::string debugLabel = "Texture (FBO: " + std::string(m_name) + " Tex: " + std::string(colorAttachment.name) + ")";
+        glObjectLabel(GL_TEXTURE, colorAttachment.handle, static_cast<GLsizei>(debugLabel.length()), debugLabel.c_str());
+    }
+
+    if (m_depthAttachment.handle != 0) {
+        glDeleteTextures(1, &m_depthAttachment.handle);
+        glCreateTextures(GL_TEXTURE_2D, 1, &m_depthAttachment.handle);
+        glTextureStorage2D(m_depthAttachment.handle, 1, m_depthAttachment.internalFormat, m_width, m_height);
+        glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(m_depthAttachment.handle, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glNamedFramebufferTexture(m_handle, GL_DEPTH_ATTACHMENT, m_depthAttachment.handle, 0);
+        std::string debugLabel = "Texture (FBO: " + std::string(m_name) + " Tex: Depth)";
+        glObjectLabel(GL_TEXTURE, m_depthAttachment.handle, static_cast<GLsizei>(debugLabel.length()), debugLabel.c_str());
+    }
+    std::cout << "Resized '" << m_name << "' framebuffer to " << m_width << ", " << m_height << "\n";
+}
+
+GLuint OpenGLFrameBuffer::GetHandle() const {
+    return m_handle;
+}
+
+GLuint OpenGLFrameBuffer::GetWidth() const {
+    return m_width;
+}
+
+GLuint OpenGLFrameBuffer::GetHeight() const {
+    return m_height;
+}

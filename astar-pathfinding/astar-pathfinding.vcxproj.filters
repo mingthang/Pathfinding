@@ -30,9 +30,6 @@
     <ClCompile Include="src\API\OpenGL\GL_backEnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\API\OpenGL\GL_renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\API\OpenGL\Types\GL_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,6 +72,27 @@
     <ClCompile Include="src\Config\Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Renderer\GL_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Types\GL_framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_loading_screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_UI_pass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Renderer\GL_renderer_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BackEnd\BackEnd.h">
@@ -84,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\API\OpenGL\GL_backEnd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\API\OpenGL\GL_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\API\OpenGL\Types\GL_shader.h">
@@ -137,5 +152,18 @@
     <ClInclude Include="src\Config\Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\API\OpenGL\Renderer\GL_renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\OpenGL\GL_ui.frag" />
+    <None Include="res\shaders\OpenGL\GL_ui.vert" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,9 @@
 #include "AssetManager.h"
 #include <UI/UIBackEnd.h>
 #include <Util/Util.h>
+#include <Common/EngineTypes.h>
+#include <Renderer/Renderer.h>
+#include <iostream>
 
 namespace AssetManager {
 
@@ -33,6 +36,22 @@ namespace AssetManager {
 
         UIBackEnd::BlitText(text, "REFont", 0, 0, Alignment::TOP_LEFT, 2.0f);
 
+        // Check texture bake
+
+        // Load models
+
+        g_loadingComplete = true;
+        
+        if (LoadingComplete()) {
+        }
+
+        // Free all cpu texture data
+        for (Texture& texture : g_textures) {
+            texture.FreeCPUMemory();
+        }
+
+        Renderer::InitMain();
+        std::cout << "Assets loaded\n";
     }
 
     bool LoadingComplete() {
