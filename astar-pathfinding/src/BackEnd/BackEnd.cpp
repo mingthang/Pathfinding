@@ -6,7 +6,9 @@
 #include <UI/UIBackEnd.h>
 #include <Core/Input/Input.h>
 #include <Core/Debug.h>
+#include <Core/Audio/Audio.h>
 #include <Config/Config.h>
+#include <Common/EngineDefines.h>
 
 #define NOMINMAX
 #ifdef _WIN32
@@ -44,6 +46,7 @@ namespace BackEnd {
 		UIBackEnd::Init();
 		// Init sub-systems
 		Input::Init(BackEnd::GetWindowPointer());
+		Audio::Init();
 
 		glfwShowWindow(static_cast<GLFWwindow*>(BackEnd::GetWindowPointer()));
 		return true;
@@ -70,6 +73,7 @@ namespace BackEnd {
 
 	void UpdateSubSystems() {
 		Input::Update();
+		Audio::Update();
 		UpdateLazyKeypresses();
 	}
 
@@ -160,12 +164,17 @@ namespace BackEnd {
 	}
 
 	void UpdateLazyKeypresses() { 
+
+		if (Input::KeyPressed(KEY_G)) {
+			BackEnd::ToggleFullscreen();
+		}
+
 		if (Input::KeyPressed(KEY_ESCAPE)) {
 			BackEnd::ForceCloseWindow();
 		}
 
 		if (Input::KeyPressed(KEY_GRAVE_ACCENT)) {
-			//Audio::PlayAudio(AUDIO_SELECT, 1.00f);
+			Audio::PlayAudio(AUDIO_SELECT, 1.00f);
 			Debug::ToggleDebugText();
 		}
 	}
