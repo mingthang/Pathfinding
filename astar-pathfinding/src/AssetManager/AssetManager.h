@@ -9,7 +9,7 @@ namespace AssetManager {
 	void Init();
 	void UpdateLoading();
 	bool LoadingComplete();
-	//void AddItemToLoadLog(std::string text);
+	void AddItemToLoadLog(std::string text);
 	std::vector<std::string>& GetLoadLog();
 
 	// Loading
@@ -27,7 +27,7 @@ namespace AssetManager {
 	std::vector<Texture>& GetTextures();
 	Texture* GetTextureByName(const std::string& name);
 	Texture* GetTextureByIndex(int index);
-	int GetTextureIndexByName(const std::string& name, bool ignoreWarning = true);
+	int GetTextureIndexByName(const std::string& name, bool ignoreWarning = false);
 	int GetTextureCount();
 
 	// Index maps

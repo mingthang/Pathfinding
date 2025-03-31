@@ -8,9 +8,9 @@ namespace Debug {
     void AddText(const std::string& text);
     void EndFrame();
     void ToggleDebugText();
-    void NextDebugRenderMode();
+    //void NextDebugRenderMode();
 
     bool IsDebugTextVisible();
     const std::string& GetText();
-    const DebugRenderMode& GetDebugRenderMode();
+    //const DebugRenderMode& GetDebugRenderMode();
 }

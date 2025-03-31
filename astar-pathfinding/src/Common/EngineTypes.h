@@ -69,3 +69,17 @@ struct FileInfo {
         }
     }
 };
+
+// Bake stuff
+struct QueuedTextureBake {
+    void* texture = nullptr;
+    int jobID = 0;
+    int width = 0;
+    int height = 0;
+    int format = 0;
+    int internalFormat = 0;
+    int mipmapLevel = 0;
+    int dataSize = 0;
+    const void* data = nullptr;
+    bool inProgress = false;
+};

@@ -5,14 +5,33 @@
 #include <AssetManager/AssetManager.h>
 #include <UI/UIBackEnd.h>
 #include <Core/Input/Input.h>
+#include <Core/Debug.h>
+#include <Config/Config.h>
+
+#define NOMINMAX
+#ifdef _WIN32
+#include <windows.h>
+#include <tlhelp32.h>
+#endif
 
 namespace BackEnd {
 
 	int g_presentTargetWidth = 0;
 	int g_presentTargetHeight = 0;
+	bool g_renderDocFound = false;
+
+	void CheckForRenderDoc();
+	void UpdateLazyKeypresses();
 
 	// Core
 	bool Init(WindowedMode windowedMode) {
+
+		CheckForRenderDoc();
+		Config::Init();
+
+		if (RenderDocFound())
+			std::cout << "RenderDoc found" << std::endl;
+
 		if (!GLFWIntegration::Init(windowedMode)) {
 			return false;
 		}
@@ -23,7 +42,6 @@ namespace BackEnd {
 
 		AssetManager::Init();
 		UIBackEnd::Init();
-
 		// Init sub-systems
 		Input::Init(BackEnd::GetWindowPointer());
 
@@ -31,18 +49,28 @@ namespace BackEnd {
 		return true;
 	}
 
+	void UpdateGame() {
+		Debug::Update();
+		UIBackEnd::Update();
+	}
+
 	void BeginFrame() {
 		GLFWIntegration::BeginFrame();
 		//RenderDataManager::BeginFrame();
-		//OpenGLBackEnd::BeginFrame();
+
+		OpenGLBackEnd::BeginFrame();
+		//OpenGLBackEnd::UpdateTextureBaking();
 	}
 
 	void EndFrame() {
 		GLFWIntegration::EndFrame();
+		UIBackEnd::EndFrame();
+		Debug::EndFrame();
 	}
 
 	void UpdateSubSystems() {
-
+		Input::Update();
+		UpdateLazyKeypresses();
 	}
 
 	void CleanUp() {
@@ -50,6 +78,14 @@ namespace BackEnd {
 	}
 
 	// Window
+	void BackEnd::ToggleFullscreen() {
+		GLFWIntegration::ToggleFullscreen();
+	}
+
+	void BackEnd::ForceCloseWindow() {
+		GLFWIntegration::ForceCloseWindow();
+	}
+
 	const WindowedMode& GetWindowedMode() {
 		return GLFWIntegration::GetWindowedMode();
 	}
@@ -88,5 +124,49 @@ namespace BackEnd {
 
 	int GetFullScreenHeight() {
 		return GLFWIntegration::GetFullScreenHeight();
+	}
+
+	void CheckForRenderDoc() {
+		#ifdef _WIN32
+		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetCurrentProcessId());
+		if (snapshot == INVALID_HANDLE_VALUE) {
+			g_renderDocFound = false;
+		}
+
+		MODULEENTRY32 moduleEntry;
+		moduleEntry.dwSize = sizeof(MODULEENTRY32);
+		bool found = false;
+		if (Module32First(snapshot, &moduleEntry)) {
+			do {
+				std::wstring wmodule(moduleEntry.szModule);
+				std::string moduleName(wmodule.begin(), wmodule.end());
+
+				if (moduleName.find("renderdoc.dll") != std::string::npos) {
+					found = true;
+					break;
+				}
+			} while (Module32Next(snapshot, &moduleEntry));
+		}
+		CloseHandle(snapshot);
+
+		g_renderDocFound = found;
+		#else
+		g_renderDocActive = false;
+		#endif
+	}
+
+	bool RenderDocFound() {
+		return g_renderDocFound;
+	}
+
+	void UpdateLazyKeypresses() { 
+		if (Input::KeyPressed(KEY_ESCAPE)) {
+			BackEnd::ForceCloseWindow();
+		}
+
+		if (Input::KeyPressed(KEY_GRAVE_ACCENT)) {
+			//Audio::PlayAudio(AUDIO_SELECT, 1.00f);
+			Debug::ToggleDebugText();
+		}
 	}
 }

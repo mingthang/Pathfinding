@@ -8,6 +8,7 @@ namespace OpenGLRenderer {
 	void Init();
 	void InitMain();
 	void RenderLoadingScreen();
+	void RenderGame();
 
 	void HotloadShaders();
 	void CreateRenderTargets(int presentWidth, int presentHeight);

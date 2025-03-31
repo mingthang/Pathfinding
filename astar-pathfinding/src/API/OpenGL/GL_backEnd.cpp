@@ -1,6 +1,7 @@
 #include "GL_backEnd.h"
 #include "GL_util.h"
 #include <BackEnd/GLFWIntegration.h>
+#include <AssetManager/BakeQueue.h>
 #include <iostream>
 
 namespace OpenGLBackEnd {
@@ -46,7 +47,7 @@ namespace OpenGLBackEnd {
             return;
         }
 
-        glGenBuffers(1, &handle);
+        glGenTextures(1, &handle);
         glBindTexture(GL_TEXTURE_2D, handle);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, OpenGLUtil::TextureWrapModeToGLEnum(texture.GetTextureWrapMode()));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, OpenGLUtil::TextureWrapModeToGLEnum(texture.GetTextureWrapMode()));
@@ -73,6 +74,42 @@ namespace OpenGLBackEnd {
         // and then pass its handle to a shader using a uniform buffer or shader storage buffer.
         glTexture.MakeBindlessTextureResident();
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    void ImmediateBake(QueuedTextureBake& queuedTextureBake) {
+        Texture* texture = static_cast<Texture*>(queuedTextureBake.texture);
+        OpenGLTexture& glTexture = texture->GetGLTexture();
+        int width = queuedTextureBake.width;
+        int height = queuedTextureBake.height;
+        int format = queuedTextureBake.format;
+        int internalFormat = queuedTextureBake.internalFormat;
+        int level = queuedTextureBake.mipmapLevel;
+        int dataSize = queuedTextureBake.dataSize;
+        const void* data = queuedTextureBake.data;
+
+        GLuint textureHandle = glTexture.GetHandle();
+
+        // Bake texture data
+        if (texture->GetImageDataType() == ImageDataType::UNCOMPRESSED) {
+            glTextureSubImage2D(textureHandle, level, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+        }
+        else if (texture->GetImageDataType() == ImageDataType::EXR) {
+            //glTextureSubImage2D(textureHandle, 0, 0, 0, glTexture.GetWidth(), glTexture.GetHeight(), GL_RGBA, GL_FLOAT, glTexture.GetData());
+        }
+        else if (texture->GetImageDataType() == ImageDataType::COMPRESSED) {
+            //glCompressedTextureSubImage2D(textureHandle, level, 0, 0, width, height, internalFormat, dataSize, data);
+        }
+
+        texture->SetTextureDataLevelBakeState(level, BakeState::BAKE_COMPLETE);
+
+        // Generate Mipmaps if none were supplied
+        if (texture->MipmapsAreRequested()) {
+            if (texture->GetTextureDataCount() == 1) {
+                glGenerateTextureMipmap(textureHandle);
+            }
+        }
+        // Cleanup bake queue
+        BakeQueue::RemoveQueuedTextureBakeByJobID(queuedTextureBake.jobID);
     }
 
     // GET

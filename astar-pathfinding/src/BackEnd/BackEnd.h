@@ -10,6 +10,7 @@ namespace BackEnd {
 	void UpdateSubSystems();
 	void EndFrame();
 	void CleanUp();
+    bool RenderDocFound();
 
 	// Window
     void SetWindowedMode(const WindowedMode& windowedMode);

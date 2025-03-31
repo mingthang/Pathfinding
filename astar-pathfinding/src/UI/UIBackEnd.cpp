@@ -1,6 +1,7 @@
 #include "UIBackEnd.h"
 #include "TextBlitter.h"
 #include <AssetManager/AssetManager.h>
+#include <Core/Debug.h>
 #include <Config/Config.h>
 #include <iostream>
 
@@ -24,10 +25,9 @@ namespace UIBackEnd {
 	}
 
 	void Update() {
-
-		//if (Debug::IsDebugTextVisible()) {
-		//	BlitText(Debug::GetText(), "REFont", 0, 0, Alignment::TOP_LEFT, 2.0f);
-		//}
+		if (Debug::IsDebugTextVisible()) {
+			BlitText(Debug::GetText(), "REFont", 0, 0, Alignment::TOP_LEFT, 2.0f);
+		}
 
 		const Resolutions& resolutions = Config::GetResolutions();
 

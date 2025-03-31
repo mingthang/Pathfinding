@@ -51,6 +51,10 @@ void OpenGLFrameBuffer::CreateDepthAttachment(GLenum internalFormat, GLenum minF
     glObjectLabel(GL_TEXTURE, m_depthAttachment.handle, static_cast<GLsizei>(debugLabel.length()), debugLabel.c_str());
 }
 
+void OpenGLFrameBuffer::ClearDepthAttachment() {
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
+
 void OpenGLFrameBuffer::Bind() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
 }
@@ -71,7 +75,7 @@ void OpenGLFrameBuffer::CleanUp() {
 
 void OpenGLFrameBuffer::ClearAttachment(const char* attachmentName, GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
     for (int i = 0; i < m_colorAttachments.size(); i++) {
-        if (Util::StrCmp(attachmentName, m_colorAttachments[i].name)) {
+        if (StrCmp(attachmentName, m_colorAttachments[i].name)) {
             GLuint texture = m_colorAttachments[i].handle;
             GLenum internalFormat = m_colorAttachments[i].internalFormat;
             GLenum format = m_colorAttachments[i].format;
@@ -93,7 +97,7 @@ void OpenGLFrameBuffer::DrawBuffers(std::vector<const char*> attachmentNames) {
 
 void OpenGLFrameBuffer::DrawBuffer(const char* attachmentName) {
     for (int i = 0; i < m_colorAttachments.size(); i++) {
-        if (Util::StrCmp(attachmentName, m_colorAttachments[i].name)) {
+        if (StrCmp(attachmentName, m_colorAttachments[i].name)) {
             glDrawBuffer(GL_COLOR_ATTACHMENT0 + i);
             return;
         }
@@ -147,7 +151,7 @@ GLuint OpenGLFrameBuffer::GetHeight() const {
 
 GLuint OpenGLFrameBuffer::GetColorAttachmentHandleByName(const char* name) const {
     for (int i = 0; i < m_colorAttachments.size(); i++) {
-        if (Util::StrCmp(name, m_colorAttachments[i].name)) {
+        if (StrCmp(name, m_colorAttachments[i].name)) {
             return m_colorAttachments[i].handle;
         }
     }
@@ -161,10 +165,14 @@ GLuint OpenGLFrameBuffer::GetDepthAttachmentHandle() const {
 
 GLenum OpenGLFrameBuffer::GetColorAttachmentSlotByName(const char* name) const {
     for (int i = 0; i < m_colorAttachments.size(); i++) {
-        if (Util::StrCmp(name, m_colorAttachments[i].name)) {
+        if (StrCmp(name, m_colorAttachments[i].name)) {
             return GL_COLOR_ATTACHMENT0 + i;
         }
     }
     std::cerr << "GetColorAttachmentSlotByName() with name '" << name << "' failed. Name does not exist in FrameBuffer '" << this->m_name << "'\n";
     return GL_INVALID_VALUE;
+}
+
+bool OpenGLFrameBuffer::StrCmp(const char* queryA, const char* queryB) {
+    return std::strcmp(queryA, queryB) == 0;
 }

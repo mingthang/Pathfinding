@@ -39,6 +39,7 @@ namespace OpenGLRenderer {
         glDisable(GL_DEPTH_TEST); // UI foreground
         glEnable(GL_BLEND); // supports alpha transparency
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         glBindVertexArray(glMesh.GetVAO());
 
         // Draw the nearest linear UI elements

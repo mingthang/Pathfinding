@@ -1,9 +1,11 @@
 #include "AssetManager.h"
+#include "BakeQueue.h"
 #include <UI/UIBackEnd.h>
 #include <Util/Util.h>
 #include <Common/EngineTypes.h>
 #include <Renderer/Renderer.h>
 #include <iostream>
+#include <mutex>
 
 namespace AssetManager {
 
@@ -36,21 +38,28 @@ namespace AssetManager {
 
         UIBackEnd::BlitText(text, "REFont", 0, 0, Alignment::TOP_LEFT, 2.0f);
 
-        // Check texture bake
-
-        // Load models
-
+        // Loading complete?
         g_loadingComplete = true;
+        // Check texture bake
+        // TODO: UpdateTextureBaking 
+        for (Texture& texture : g_textures) {
+            texture.CheckForBakeCompletion();
+            if (!texture.BakeComplete()) {
+                g_loadingComplete = false;
+                return;
+            }
+        }
+        // Load models
         
         if (LoadingComplete()) {
         }
 
-        // Free all cpu texture data
+        // Free all CPU texture data
         for (Texture& texture : g_textures) {
             texture.FreeCPUMemory();
         }
 
-        Renderer::InitMain();
+        //Renderer::InitMain();
         std::cout << "Assets loaded\n";
     }
 
@@ -71,6 +80,16 @@ namespace AssetManager {
         }
     }
 
+    void AddItemToLoadLog(std::string text) {
+        std::replace(text.begin(), text.end(), '\\', '/');
+        g_loadLog.push_back(text);
+        if (false) {
+            static std::mutex mutex;
+            std::lock_guard<std::mutex> lock(mutex);
+            std::cout << text << "\n";
+        }
+    }
+
     // Loading
     void LoadFontTextures() {
         for (FileInfo& fileInfo : Util::IterateDirectory("res/fonts", { "png" })) {
@@ -82,6 +101,7 @@ namespace AssetManager {
             texture.SetMagFilter(TextureFilter::NEAREST);
         }
         LoadPendingTexturesAsync();
+        BakeQueue::ImmediateBakeAllTextures();
         BuildTextureIndexMap();
     }
 

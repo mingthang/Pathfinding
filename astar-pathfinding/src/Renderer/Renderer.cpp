@@ -12,4 +12,8 @@ namespace Renderer {
 	void RenderLoadingScreen() {
 		OpenGLRenderer::RenderLoadingScreen();
 	}
+
+	void RenderGame() {
+		OpenGLRenderer::RenderGame();
+	}
 }

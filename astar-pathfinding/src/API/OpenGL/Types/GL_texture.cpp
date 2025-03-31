@@ -1,5 +1,6 @@
 #include "GL_texture.h"
 #include <API/OpenGL/GL_util.h>
+#include <BackEnd/BackEnd.h>
 #include <glad/glad.h>
 
 void OpenGLTexture::AllocateMemory(int width, int height, int format, int internalFormat, int mipmapLevelCount) {
@@ -30,6 +31,8 @@ void OpenGLTexture::AllocateMemory(int width, int height, int format, int intern
 }
 
 void OpenGLTexture::MakeBindlessTextureResident() {
+	if (BackEnd::RenderDocFound()) return;
+
 	if (m_bindlessID == 0) {
 		m_bindlessID = glGetTextureHandleARB(m_handle);
 	}
@@ -37,6 +40,8 @@ void OpenGLTexture::MakeBindlessTextureResident() {
 }
 
 void OpenGLTexture::MakeBindlessTextureNonResident() {
+	if (BackEnd::RenderDocFound()) return;
+
 	if (m_bindlessID != 0) {
 		glMakeTextureHandleNonResidentARB(m_bindlessID);
 		m_bindlessID = 0;

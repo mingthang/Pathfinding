@@ -13,18 +13,17 @@ int main()
 
 	while (BackEnd::WindowIsOpen()) {
 		BackEnd::BeginFrame();
+		BackEnd::UpdateSubSystems();
 
 		// Render Loading Screen
 		if (!AssetManager::LoadingComplete()) {
 			AssetManager::UpdateLoading();
 			Renderer::RenderLoadingScreen();
-
-			//if(AssetManager::LoadingComplete())
 		}
 		// Update/Render Game
 		else {
-			//BackEnd::UpdateGame();
-			//Renderer::
+			BackEnd::UpdateGame();
+			Renderer::RenderGame();
 		}
 
 		BackEnd::EndFrame();

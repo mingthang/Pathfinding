@@ -46,3 +46,5 @@
 #define KEY_BACKSLASH          92  /* \ */
 #define KEY_RIGHT_BRACKET      93  /* ] */
 #define KEY_GRAVE_ACCENT       96  /* ` */
+
+#define KEY_ESCAPE             256

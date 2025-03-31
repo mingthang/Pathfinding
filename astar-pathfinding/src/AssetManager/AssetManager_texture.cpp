@@ -1,5 +1,6 @@
 #include "AssetManager.h"
 #include <API/OpenGL/GL_backEnd.h>
+#include <AssetManager/BakeQueue.h>
 #include <Util/Util.h>
 #include <future>
 #include <iostream>
@@ -34,21 +35,21 @@ namespace AssetManager {
 		for (Texture& texture : textures) {
 			// OpenGL
 			OpenGLBackEnd::AllocateTextureMemory(texture);
+			//texture.GetGLTexture().AllocateMemory(texture.GetWidth(0), texture.GetHeight(0), texture.GetFormat(), texture.GetInternalFormat(), texture.GetMipmapLevelCount());
 		}
 	}
 
 	void LoadTexture(Texture* texture) {
 		if (texture) {
 			texture->Load();
-			// bake texture
-			// ...
+			// move to queue bake texture
+			BakeQueue::QueueTextureForBaking(texture);
 		}
 	}
 
-
 	// GET
 	Texture* GetTextureByName(const std::string& name) {
-		std::vector<Texture> textures = GetTextures();
+		std::vector<Texture>& textures = GetTextures();
 		for (Texture& texture : textures) {
 			if (texture.GetFileInfo().name == name)
 				return &texture;
@@ -58,10 +59,11 @@ namespace AssetManager {
 	}
 
 	Texture* GetTextureByIndex(int index) {
-		std::vector<Texture> textures = GetTextures();
-		if (index != -1)
+		std::vector<Texture>& textures = GetTextures();
+		if (index != -1) {
 			return &textures[index];
-		std::cout << "AssetManager::GetTextureByIndex(int index) failed because '" << index << "' is not in range\n";
+		}
+		std::cout << "AssetManager::GetTextureByIndex() failed because index was -1\n";
 		return nullptr;
 	}
 

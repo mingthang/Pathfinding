@@ -10,6 +10,11 @@ namespace OpenGLBackEnd {
 
 	// Textures
 	void AllocateTextureMemory(Texture& texture);
+	void UpdateTextureBaking();
+	void ImmediateBake(QueuedTextureBake& queuedTextureBake);
+	void AsyncBakeQueuedTextureBake(QueuedTextureBake& queuedTextureBake);
+	void CleanUpBakingPBOs();
+	const std::vector<GLuint64>& GetBindlessTextureIDs();
 
 	// GET
 	GLuint GetVertexDataVAO();

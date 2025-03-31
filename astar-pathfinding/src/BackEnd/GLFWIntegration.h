@@ -9,6 +9,7 @@ namespace GLFWIntegration {
     void EndFrame();
     void SetWindowedMode(const WindowedMode& windowedMode);
     void ToggleFullscreen();
+    void ForceCloseWindow();
     bool WindowIsOpen();
     bool WindowHasFocus();
     bool WindowIsMinimized();

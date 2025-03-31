@@ -19,8 +19,14 @@ public:
 	void SetTextureWrapMode(TextureWrapMode wrapMode);
 	void SetMinFilter(TextureFilter minFilter);
 	void SetMagFilter(TextureFilter magFilter);
-	void SetTextureDataLevelBakeState(int index, BakeState bakeState);
 
+	// BAKE
+	void SetTextureDataLevelBakeState(int index, BakeState bakeState);
+	void CheckForBakeCompletion();
+	const bool BakeComplete();
+	//const BakeState GetTextureDataLevelBakeState(int index);
+
+	const int GetTextureDataCount();
 	OpenGLTexture& GetGLTexture();
 	const int GetWidth(int mipmapLevel);
 	const int GetHeight(int mipmapLevel);
@@ -38,7 +44,6 @@ public:
 	const TextureFilter GetMinFilter();
 	const TextureFilter GetMagFilter();
 	const LoadingState GetLoadingState();
-	const BakeState GetTextureDataLevelBakeState(int index);
 
 private:
 	OpenGLTexture m_glTexture;

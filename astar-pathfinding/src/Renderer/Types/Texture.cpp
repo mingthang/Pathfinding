@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include <AssetManager/AssetManager.h>
 #include <Tools/ImageTools.h>
 #include <iostream>
 #include <stb_image/stb_image.h>
@@ -6,6 +7,7 @@
 void Texture::Load() {
 	// Load texture data from disk
 	if (m_imageDataType == ImageDataType::UNCOMPRESSED) {
+		// Read data from image file by using stb_image, then return list of TextureData
 		m_textureDataLevels = { ImageTools::LoadUncompressedTextureData(m_fileInfo.path) };
 	}
 	else if (m_imageDataType == ImageDataType::COMPRESSED) {
@@ -63,6 +65,27 @@ void Texture::SetMagFilter(TextureFilter maxFilter) {
 
 void Texture::SetTextureDataLevelBakeState(int index, BakeState bakeState) {
     m_textureDataLevelBakeStates[index] = bakeState;
+}
+
+void Texture::CheckForBakeCompletion() {
+    if (m_bakeCompleted) {
+        return;
+    }
+    else {
+        m_bakeCompleted = true;
+        for (BakeState& state : m_textureDataLevelBakeStates) {
+            if (state != BakeState::BAKE_COMPLETE) {
+                m_bakeCompleted = false;
+                return;
+            }
+        }
+        // Bake is completed!
+        AssetManager::AddItemToLoadLog(GetFilePath());
+    }
+}
+
+const bool Texture::BakeComplete() {
+    return m_bakeCompleted;
 }
 
 const int Texture::GetWidth(int mipmapLevel) {
@@ -141,6 +164,10 @@ const int Texture::GetChannelCount() {
         std::cout << "Texture::GetChannelCount() FAILED: m_textureData is empty." << "\n";
         return 0;
     }
+}
+
+const int Texture::GetTextureDataCount() {
+    return m_textureDataLevels.size();
 }
 
 const std::string& Texture::GetFileName() {

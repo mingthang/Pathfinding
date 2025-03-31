@@ -12,6 +12,7 @@ namespace GLFWIntegration {
 	WindowedMode g_windowedMode = WindowedMode::WINDOWED;
 	GLFWmonitor* g_monitor;
 	const GLFWvidmode* g_mode;
+	bool g_forceCloseWindow = false;
 	int g_currentCursor;
 	std::unordered_map<int, GLFWcursor*> g_cursorsPtrs;
 	int g_fullscreenWidth = 0;
@@ -97,6 +98,7 @@ namespace GLFWIntegration {
 
 	void EndFrame() {
 		glfwSwapBuffers(g_window);
+		return;
 	}
 
 	void Destroy() {
@@ -137,6 +139,10 @@ namespace GLFWIntegration {
 		}
 	}
 
+	void ForceCloseWindow() {
+		g_forceCloseWindow = true;
+	}
+
 	void SetCursor(int cursor) {
 		g_currentCursor = cursor;
 		glfwSetCursor(g_window, g_cursorsPtrs[cursor]);
@@ -175,7 +181,7 @@ namespace GLFWIntegration {
 	}
 
 	bool WindowIsOpen() {
-		return !(glfwWindowShouldClose(g_window));
+		return !(glfwWindowShouldClose(g_window) || g_forceCloseWindow);
 	}
 
 	bool WindowIsMinimized() {

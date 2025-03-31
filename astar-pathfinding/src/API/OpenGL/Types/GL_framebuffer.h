@@ -28,6 +28,8 @@ private:
     std::vector<ColorAttachment> m_colorAttachments;
     DepthAttachment m_depthAttachment;
 
+    static bool StrCmp(const char* queryA, const char* queryB);
+
 public:
 
     OpenGLFrameBuffer() = default;
@@ -38,6 +40,7 @@ public:
     void Create(const char* name, const glm::ivec2& resolution);
     void CreateAttachment(const char* name, GLenum internalFormat, GLenum minFilter = GL_LINEAR, GLenum magFilter = GL_LINEAR);
     void CreateDepthAttachment(GLenum internalFormat, GLenum minFilter = GL_LINEAR, GLenum magFilter = GL_LINEAR, GLint wrap = GL_CLAMP_TO_EDGE, glm::vec4 borderColor = glm::vec4(1.0f));
+    void ClearDepthAttachment();
     void Bind();
     void BindDepthAttachmentFrom(const OpenGLFrameBuffer& srcFrameBuffer);
     void SetViewport();

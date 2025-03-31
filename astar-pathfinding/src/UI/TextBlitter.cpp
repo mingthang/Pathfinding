@@ -20,17 +20,17 @@ namespace TextBlitter {
 		g_fontSpriteSheets.push_back(fontSpriteSheet);
 	}
 
-	MeshData2D BlitText(const std::string& text, const std::string& fontName, int originX, int originY, glm::ivec2 viewportSize, Alignment alignment, float scale, uint32_t baseVertex) {
-		FontSpriteSheet* spriteSheet = GetFontSpriteSheet(fontName);
-		MeshData2D meshData;
-		int textureIndex = AssetManager::GetTextureIndexByName(fontName);
+    MeshData2D BlitText(const std::string& text, const std::string& fontName, int originX, int originY, glm::ivec2 viewportSize, Alignment alignment, float scale, uint32_t baseVertex) {
+        FontSpriteSheet* spriteSheet = GetFontSpriteSheet(fontName);
+        MeshData2D meshData;
+        int textureIndex = AssetManager::GetTextureIndexByName(fontName);
 
-		// Bail if spritesheet or font texture not found
-		if (!spriteSheet || textureIndex == -1) {
-			return meshData;
-		}
-		// Otherwise construct vertex data
-		else {
+        // Bail if spritesheet or font texture not found
+        if (!spriteSheet || textureIndex == -1) {
+            return meshData;
+        }
+        // Otherwise construct the vertex data
+        else {
             float cursorX = static_cast<float>(originX);
             float cursorY = static_cast<float>(viewportSize.y - originY); // Top left corner
             float reachX = cursorX;
@@ -159,8 +159,8 @@ namespace TextBlitter {
             }
 
             return meshData;
-		}
-	}
+        }
+    }
 
 	FontSpriteSheet* GetFontSpriteSheet(const std::string& name) {
 		auto it = g_fontIndices.find(name);
@@ -194,6 +194,5 @@ namespace TextBlitter {
         color.a = std::strtof(endPtr + 1, &endPtr);
         return color;
     }
-
 
 }

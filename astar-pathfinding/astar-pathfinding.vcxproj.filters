@@ -108,6 +108,12 @@
     <ClCompile Include="vendor\include\glm\glm.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager\BakeQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BackEnd\BackEnd.h">
@@ -1053,6 +1059,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vendor\include\KHR\khrplatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetManager\BakeQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
