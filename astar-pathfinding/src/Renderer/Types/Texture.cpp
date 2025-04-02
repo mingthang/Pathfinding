@@ -63,8 +63,13 @@ void Texture::SetMagFilter(TextureFilter maxFilter) {
     m_magFilter = maxFilter;
 }
 
-void Texture::SetTextureDataLevelBakeState(int index, BakeState bakeState) {
-    m_textureDataLevelBakeStates[index] = bakeState;
+void Texture::SetTextureDataLevelBakeState(int index, BakeState state) {
+    if (index >= 0 && m_textureDataLevelBakeStates.size() && index < m_textureDataLevelBakeStates.size()) {
+        m_textureDataLevelBakeStates[index] = state;
+    }
+    else {
+        std::cout << "Texture::SetTextureDataLevelBakeState(int index, BakeState state) failed. Index '" << index << "' out of range of size " << m_textureDataLevelBakeStates.size() << "\n";
+    }
 }
 
 void Texture::CheckForBakeCompletion() {
@@ -79,7 +84,9 @@ void Texture::CheckForBakeCompletion() {
                 return;
             }
         }
+
         // Bake is completed!
+        //std::cout << GetFilePath() << " baked" << std::endl;
         AssetManager::AddItemToLoadLog(GetFilePath());
     }
 }

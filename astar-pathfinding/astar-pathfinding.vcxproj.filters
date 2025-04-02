@@ -117,6 +117,39 @@
     <ClCompile Include="src\Core\Audio\Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Pathfinding\Pathfinding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\GridMap\GridMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\Util_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_debug_pass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\RenderDataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_grid_pass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\API\OpenGL\Types\GL_pbo.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Types\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Types\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager\AssetManager_mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BackEnd\BackEnd.h">
@@ -1076,6 +1109,30 @@
     <ClInclude Include="src\Common\EngineDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Pathfinding\Pathfinding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\GridMap\GridMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\API\OpenGL\Types\GL_debug_mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\RenderDataManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\API\OpenGL\Types\GL_indirectBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Types\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Types\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\OpenGL\GL_ui.frag" />
@@ -1495,6 +1552,10 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="res\fonts\REFont.json" />
+    <None Include="res\shaders\OpenGL\GL_debug_vertex.frag" />
+    <None Include="res\shaders\OpenGL\GL_debug_vertex.vert" />
+    <None Include="res\shaders\OpenGL\GL_tile.frag" />
+    <None Include="res\shaders\OpenGL\GL_tile.vert" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="vendor\lib\glfw3.lib" />
@@ -1762,6 +1823,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\fonts\raw_images\RE_font\char_87.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\uncompressed\tile_wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\uncompressed\tile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\uncompressed\selector.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

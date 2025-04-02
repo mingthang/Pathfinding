@@ -2,6 +2,7 @@
 #include <iostream>
 
 namespace OpenGLUtil {
+
     GLint GetFormatFromChannelCount(int channelCount) {
         switch (channelCount) {
         case 4: return GL_RGBA;

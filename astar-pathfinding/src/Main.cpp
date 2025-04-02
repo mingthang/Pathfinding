@@ -1,12 +1,13 @@
 #include "BackEnd/BackEnd.h"
 #include <AssetManager/AssetManager.h>
 #include <Renderer/Renderer.h>
+#include <Core/Game.h>
 #include <iostream>
 
 int main()
 {
 
-	if (!BackEnd::Init(WindowedMode::WINDOWED)) {
+	if (!BackEnd::Init(WindowedMode::FULLSCREEN)) {
 		std::cout << "BankEnd::Init() FAILED.\n";
 		return -1;
 	}
@@ -19,6 +20,9 @@ int main()
 		if (!AssetManager::LoadingComplete()) {
 			AssetManager::UpdateLoading();
 			Renderer::RenderLoadingScreen();
+
+			if (AssetManager::LoadingComplete())
+				Game::Create();
 		}
 		// Update/Render Game
 		else {

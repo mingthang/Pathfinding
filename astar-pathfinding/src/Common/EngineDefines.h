@@ -1,5 +1,15 @@
 #pragma once
 
+#define NEAR_PLANE 0.004f
+#define FAR_PLANE 256.0f
+
+#define TIME_WRAP 10000.0f
+
+// Render Limits
+#define TEXTURE_ARRAY_SIZE 1024
+#define MAX_INSTANCE_DATA_COUNT 8192
+#define MAX_INDIRECT_DRAW_COMMAND_COUNT 4096
+
 // System audio
 #define AUDIO_SELECT "SELECT0.wav"
 #define AUDIO_CANTSELECT "CANT_SELECT.mp3"

@@ -16,6 +16,9 @@ namespace OpenGLBackEnd {
 	void CleanUpBakingPBOs();
 	const std::vector<GLuint64>& GetBindlessTextureIDs();
 
+	// Buffers
+	void UploadVertexData(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+
 	// GET
 	GLuint GetVertexDataVAO();
 	GLuint GetVertexDataVBO();

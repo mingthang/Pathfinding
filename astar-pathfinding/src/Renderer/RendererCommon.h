@@ -35,23 +35,3 @@ struct CameraData {
     float colorMultiplierG;
     float colorMultiplierB;
 };
-
-struct Vertex {
-
-    Vertex() = default;
-    Vertex(glm::vec3 pos) {
-        position = pos;
-    }
-    Vertex(glm::vec3 pos, glm::vec3 norm) {
-        position = pos;
-        normal = norm;
-    }
-    glm::vec3 position = glm::vec3(0);
-    glm::vec3 normal = glm::vec3(0);
-    glm::vec2 uv = glm::vec2(0);
-    glm::vec3 tangent = glm::vec3(0);
-
-    bool operator==(const Vertex& other) const {
-        return position == other.position && normal == other.normal && uv == other.uv;
-    }
-};

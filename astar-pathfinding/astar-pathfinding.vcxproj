@@ -158,12 +158,16 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
     <ClCompile Include="src\API\OpenGL\GL_backEnd.cpp" />
     <ClCompile Include="src\API\OpenGL\Renderer\GL_renderer.cpp" />
     <ClCompile Include="src\API\OpenGL\GL_util.cpp" />
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_debug_pass.cpp" />
+    <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_grid_pass.cpp" />
     <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_loading_screen.cpp" />
     <ClCompile Include="src\API\OpenGL\Renderer\GL_renderer_util.cpp" />
     <ClCompile Include="src\API\OpenGL\Renderer\RenderPasses\GL_UI_pass.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_framebuffer.cpp" />
+    <ClCompile Include="src\API\OpenGL\Types\GL_pbo.h" />
     <ClCompile Include="src\API\OpenGL\Types\GL_shader.cpp" />
     <ClCompile Include="src\API\OpenGL\Types\GL_texture.cpp" />
+    <ClCompile Include="src\AssetManager\AssetManager_mesh.cpp" />
     <ClCompile Include="src\AssetManager\AssetManager_texture.cpp" />
     <ClCompile Include="src\AssetManager\BakeQueue.cpp" />
     <ClCompile Include="src\BackEnd\BackEnd.cpp" />
@@ -173,10 +177,16 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
     <ClCompile Include="src\Config\Config.cpp" />
     <ClCompile Include="src\Core\Audio\Audio.cpp" />
     <ClCompile Include="src\Core\Debug.cpp" />
+    <ClCompile Include="src\Core\Game.cpp" />
+    <ClCompile Include="src\Core\GridMap\GridMap.cpp" />
     <ClCompile Include="src\Core\Input\Input.cpp" />
     <ClCompile Include="src\Core\Input\Input_keycodes.h" />
+    <ClCompile Include="src\Core\Pathfinding\Pathfinding.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Renderer\RenderDataManager.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Renderer\Types\Mesh.cpp" />
+    <ClCompile Include="src\Renderer\Types\Model.cpp" />
     <ClCompile Include="src\Renderer\Types\Texture.cpp" />
     <ClCompile Include="src\Tools\ImageTools.cpp" />
     <ClCompile Include="src\UI\FontSpriteSheet.cpp" />
@@ -184,6 +194,7 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
     <ClCompile Include="src\UI\TextBlitter.cpp" />
     <ClCompile Include="src\UI\UIBackEnd.cpp" />
     <ClCompile Include="src\Util\Util_file.cpp" />
+    <ClCompile Include="src\Util\Util_math.cpp" />
     <ClCompile Include="src\Util\Util_text.cpp" />
     <ClCompile Include="vendor\include\glm\detail\glm.cpp" />
     <ClCompile Include="vendor\include\glm\glm.cppm" />
@@ -194,7 +205,9 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
     <ClInclude Include="src\API\OpenGL\GL_backEnd.h" />
     <ClInclude Include="src\API\OpenGL\Renderer\GL_renderer.h" />
     <ClInclude Include="src\API\OpenGL\GL_util.h" />
+    <ClInclude Include="src\API\OpenGL\Types\GL_debug_mesh.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_framebuffer.h" />
+    <ClInclude Include="src\API\OpenGL\Types\GL_indirectBuffer.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_mesh2D.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_shader.h" />
     <ClInclude Include="src\API\OpenGL\Types\GL_texture.h" />
@@ -207,9 +220,15 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
     <ClInclude Include="src\Config\Config.h" />
     <ClInclude Include="src\Core\Audio\Audio.h" />
     <ClInclude Include="src\Core\Debug.h" />
+    <ClInclude Include="src\Core\Game.h" />
+    <ClInclude Include="src\Core\GridMap\GridMap.h" />
     <ClInclude Include="src\Core\Input\Input.h" />
+    <ClInclude Include="src\Core\Pathfinding\Pathfinding.h" />
+    <ClInclude Include="src\Renderer\RenderDataManager.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\RendererCommon.h" />
+    <ClInclude Include="src\Renderer\Types\Mesh.h" />
+    <ClInclude Include="src\Renderer\Types\Model.h" />
     <ClInclude Include="src\Renderer\Types\Texture.h" />
     <ClInclude Include="src\Tools\ImageTools.h" />
     <ClInclude Include="src\UI\FontSpriteSheet.h" />
@@ -513,6 +532,10 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts\REFont.json" />
+    <None Include="res\shaders\OpenGL\GL_debug_vertex.frag" />
+    <None Include="res\shaders\OpenGL\GL_debug_vertex.vert" />
+    <None Include="res\shaders\OpenGL\GL_tile.frag" />
+    <None Include="res\shaders\OpenGL\GL_tile.vert" />
     <None Include="res\shaders\OpenGL\GL_ui.frag" />
     <None Include="res\shaders\OpenGL\GL_ui.vert" />
     <None Include="vendor\include\glm\detail\func_common.inl" />
@@ -746,6 +769,9 @@ xcopy "$(ProjectDir)res\shaders" "$(TargetDir)res\shaders" /e /y /i /r</Command>
     <Image Include="res\fonts\raw_images\RE_font\char_87.png" />
     <Image Include="res\fonts\raw_images\RE_font\char_9.png" />
     <Image Include="res\fonts\REFont.png" />
+    <Image Include="res\textures\uncompressed\selector.png" />
+    <Image Include="res\textures\uncompressed\tile.png" />
+    <Image Include="res\textures\uncompressed\tile_wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

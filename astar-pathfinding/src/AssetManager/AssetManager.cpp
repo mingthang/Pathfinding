@@ -6,12 +6,18 @@
 #include <Renderer/Renderer.h>
 #include <iostream>
 #include <mutex>
+#include <API/OpenGL/GL_backEnd.h>
 
 namespace AssetManager {
 
+    std::vector<Mesh> g_meshes;
+    std::vector<Model> g_models;
     std::vector<Texture> g_textures;
 
     std::unordered_map<std::string, int> g_textureIndexMap;
+
+    std::vector<Vertex> g_vertices;
+    std::vector<uint32_t> g_indices;
 
     std::vector<std::string> g_loadLog;
     bool g_loadingComplete = false;
@@ -20,6 +26,7 @@ namespace AssetManager {
     void LoadFontTextures();
 
     void Init() {
+        CreateHardcodedModels();
         LoadFontTextures();
         FindAssetPaths();
 
@@ -41,7 +48,6 @@ namespace AssetManager {
         // Loading complete?
         g_loadingComplete = true;
         // Check texture bake
-        // TODO: UpdateTextureBaking 
         for (Texture& texture : g_textures) {
             texture.CheckForBakeCompletion();
             if (!texture.BakeComplete()) {
@@ -49,9 +55,11 @@ namespace AssetManager {
                 return;
             }
         }
+
         // Load models
-        
         if (LoadingComplete()) {
+            BuildTextureIndexMap();
+            OpenGLBackEnd::UploadVertexData(g_vertices, g_indices);
         }
 
         // Free all CPU texture data
@@ -76,7 +84,7 @@ namespace AssetManager {
             texture.SetTextureWrapMode(TextureWrapMode::REPEAT);
             texture.SetMinFilter(TextureFilter::LINEAR_MIPMAP);
             texture.SetMagFilter(TextureFilter::LINEAR);
-            texture.RequestMipmaps();
+            //texture.RequestMipmaps();
         }
     }
 
@@ -117,11 +125,57 @@ namespace AssetManager {
     }
 
     // GET
+    std::vector<Vertex>& GetVertices() {
+        return g_vertices;
+    }
+
+    std::vector<uint32_t>& GetIndices() {
+        return g_indices;
+    }
+
+    std::vector<Mesh>& GetMeshes() {
+        return g_meshes;
+    }
+
     std::vector<Texture>& GetTextures() {
         return g_textures;
     }
 
     std::unordered_map<std::string, int>& GetTextureIndexMap() {
         return g_textureIndexMap;
+    }
+
+    void CreateHardcodedModels() {
+        /* Quad */ {
+            Vertex vertA, vertB, vertC, vertD;
+            vertA.position = { -1.0f, -1.0f, 0.0f };
+            vertB.position = { -1.0f, 1.0f, 0.0f };
+            vertC.position = { 1.0f,  1.0f, 0.0f };
+            vertD.position = { 1.0f,  -1.0f, 0.0f };
+            vertA.uv = { 0.0f, 0.0f };
+            vertB.uv = { 0.0f, 1.0f };
+            vertC.uv = { 1.0f, 1.0f };
+            vertD.uv = { 1.0f, 0.0f };
+            vertA.normal = glm::vec3(0, 0, 1);
+            vertB.normal = glm::vec3(0, 0, 1);
+            vertC.normal = glm::vec3(0, 0, 1);
+            vertD.normal = glm::vec3(0, 0, 1);
+            vertA.tangent = glm::vec3(1, 0, 0);
+            vertB.tangent = glm::vec3(1, 0, 0);
+            vertC.tangent = glm::vec3(1, 0, 0);
+            vertD.tangent = glm::vec3(1, 0, 0);
+            std::vector<Vertex> vertices;
+            vertices.push_back(vertA);
+            vertices.push_back(vertB);
+            vertices.push_back(vertC);
+            vertices.push_back(vertD);
+            std::vector<uint32_t> indices = { 2, 1, 0, 3, 2, 0 };
+            std::string name = "Quad";
+
+            Model& model = g_models.emplace_back();
+            model.SetName(name);
+            model.AddMeshIndex(AssetManager::CreateMesh("Quad", vertices, indices));
+        }
+
     }
 }

@@ -35,14 +35,12 @@ namespace AssetManager {
 		for (Texture& texture : textures) {
 			// OpenGL
 			OpenGLBackEnd::AllocateTextureMemory(texture);
-			//texture.GetGLTexture().AllocateMemory(texture.GetWidth(0), texture.GetHeight(0), texture.GetFormat(), texture.GetInternalFormat(), texture.GetMipmapLevelCount());
 		}
 	}
 
 	void LoadTexture(Texture* texture) {
 		if (texture) {
 			texture->Load();
-			// move to queue bake texture
 			BakeQueue::QueueTextureForBaking(texture);
 		}
 	}

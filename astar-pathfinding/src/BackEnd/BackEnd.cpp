@@ -7,8 +7,10 @@
 #include <Core/Input/Input.h>
 #include <Core/Debug.h>
 #include <Core/Audio/Audio.h>
+#include <Core/Game.h>
 #include <Config/Config.h>
 #include <Common/EngineDefines.h>
+#include <Renderer/RenderDataManager.h>
 
 #define NOMINMAX
 #ifdef _WIN32
@@ -53,16 +55,25 @@ namespace BackEnd {
 	}
 
 	void UpdateGame() {
+
+		const Resolutions& resolutions = Config::GetResolutions();
+		float deltaTime;
+
+		Game::Update();
+
 		Debug::Update();
 		UIBackEnd::Update();
+		RenderDataManager::Update();
 	}
 
 	void BeginFrame() {
 		GLFWIntegration::BeginFrame();
-		//RenderDataManager::BeginFrame();
+		RenderDataManager::BeginFrame();
 
 		OpenGLBackEnd::BeginFrame();
-		//OpenGLBackEnd::UpdateTextureBaking();
+		OpenGLBackEnd::UpdateTextureBaking();
+
+		Game::BeginFrame();
 	}
 
 	void EndFrame() {

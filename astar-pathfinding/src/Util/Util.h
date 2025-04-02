@@ -7,6 +7,10 @@
 #include <Common/EngineEnums.h>
 
 namespace Util {
+    // Math
+    float MapRange(float inValue, float minInRange, float maxInRange, float minOutRange, float maxOutRange);
+    glm::vec2 ScreenToNDC(glm::vec2 screenPos, glm::vec2 viewportSize);
+
     // FILE
     std::string ReadTextFromFile(std::string path);
     std::string GetFullPath(const std::filesystem::directory_entry& entry);
