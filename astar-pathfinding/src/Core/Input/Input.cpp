@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <BackEnd/BackEnd.h>
+#include <iostream>
 
 namespace Input {
 
@@ -44,7 +45,7 @@ namespace Input {
         g_window = static_cast<GLFWwindow*>(glfwWindow);
         glfwSetScrollCallback(g_window, MouseScrollCallback);
         glfwGetCursorPos(g_window, &x, &y);
-        DisableCursor();
+        //DisableCursor();
         g_mouseOffsetX = x;
         g_mouseOffsetY = y;
         g_mouseX = x;

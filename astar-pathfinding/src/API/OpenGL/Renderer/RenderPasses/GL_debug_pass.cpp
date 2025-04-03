@@ -23,10 +23,10 @@ namespace OpenGLRenderer {
         gBuffer->Bind();
         gBuffer->DrawBuffer("BaseColor");
 
-        glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
         glDisable(GL_BLEND);
         glPointSize(8.0f);
+        glLineWidth(3.0f);
 
         shader->Use();
         // Here we can do multiple viewports, but for now only one

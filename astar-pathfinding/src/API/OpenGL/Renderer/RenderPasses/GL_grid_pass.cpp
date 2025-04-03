@@ -22,7 +22,7 @@ namespace OpenGLRenderer {
         gBuffer->Bind();
         // Here we can do multiple viewports, but for now only one
         gBuffer->SetViewport();
-        gBuffer->ClearAttachment("BaseColor", 1.0f, 0.0f, 0.0f, 1.0f);
+        gBuffer->ClearAttachment("BaseColor", 0.0f, 0.0f, 0.0f, 1.0f);
         gBuffer->DrawBuffers({ "BaseColor" });
 
         shader->Use();
@@ -44,12 +44,15 @@ namespace OpenGLRenderer {
                 continue;
             }
             shader->SetMat4("u_modelMatrix", renderItem.modelMatrix);
+            shader->SetVec4("u_color", glm::vec4(renderItem.colorTintR, renderItem.colorTintG, renderItem.colorTintB, 1.0f));
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, AssetManager::GetTextureByIndex(renderItem.textureIndex)->GetGLTexture().GetHandle());
 
             glDrawElementsBaseVertex(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * mesh->baseIndex), mesh->baseVertex);
         }
+
+        glBindVertexArray(0);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);

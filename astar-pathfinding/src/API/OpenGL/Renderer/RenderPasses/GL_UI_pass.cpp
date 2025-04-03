@@ -65,6 +65,8 @@ namespace OpenGLRenderer {
         if (g_quadVAO == 0) {
             g_quadVAO = OpenGLRenderer::CreateQuadVAO();
         }
+
+        // Draw UI color buffer to a quad then draw it to default framebuffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 

@@ -57,7 +57,7 @@ namespace BackEnd {
 	void UpdateGame() {
 
 		const Resolutions& resolutions = Config::GetResolutions();
-		float deltaTime;
+		float deltaTime = Game::GetDeltaTime();
 
 		Game::Update();
 

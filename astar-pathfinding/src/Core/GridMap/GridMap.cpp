@@ -8,6 +8,8 @@
 #include <BackEnd/BackEnd.h>
 #include <Util/Util.h>
 #include <API/OpenGL/Renderer/GL_renderer.h>
+#include <Core/Debug.h>
+#include <UI/UIBackEnd.h>
 
 namespace GridMap {
 	int g_mapWidth = 0;
@@ -20,7 +22,7 @@ namespace GridMap {
 		const Resolutions& resolutions = Config::GetResolutions();
 
 		g_mapWidth = resolutions.gBuffer.x / CELL_SIZE;
-		g_mapHeight = resolutions.gBuffer.y / CELL_SIZE + 1;
+		g_mapHeight = resolutions.gBuffer.y / CELL_SIZE;
 		g_map.resize(g_mapWidth, std::vector<bool>(g_mapHeight, false));
 	}
 
@@ -85,13 +87,18 @@ namespace GridMap {
 	}
 
 	void ClearMap() {
-		for (int y = 0; y < GetMapWidth(); ++y) {
-			for (int x = 0; x < GetMapHeight(); ++x) {
-				g_map[y][x] = false;
+		//for (int y = 0; y < GetMapWidth(); ++y) {
+		//	for (int x = 0; x < GetMapHeight(); ++x) {
+		//		g_map[y][x] = false;
+		//	}
+		//}
+		for (int x = 0; x < GetMapWidth(); ++x) {
+			for (int y = 0; y < GetMapHeight(); ++y) {
+				g_map[x][y] = false;
 			}
 		}
-		g_start = { 0,0 };
-		g_target = { 0,1 };
+		g_start = { 0, 0 };
+		g_target = { 0, 1 };
 	}
 
 	void SetStart(int x, int y) {
@@ -131,16 +138,15 @@ namespace GridMap {
 		glm::ivec2 viewportSize = glm::ivec2(resolutions.gBuffer.x, resolutions.gBuffer.y);
 		std::vector<RenderItem2D> renderItems;
 
-		int drawX = Util::MapRange(Input::GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x);
-		int drawY = Util::MapRange(Input::GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y);
+		int drawX = Util::MapRange(GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x);
+		int drawY = Util::MapRange(GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y);
 		drawX /= CELL_SIZE;
 		drawY /= CELL_SIZE;
 		drawX *= CELL_SIZE;
 		drawY *= CELL_SIZE;
-		drawY = resolutions.gBuffer.y - drawY;
 
-		int cellX = Util::MapRange(Input::GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x) / CELL_SIZE;
-		int cellY = Util::MapRange(Input::GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y) / CELL_SIZE;
+		int cellX = Util::MapRange(GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x) / CELL_SIZE;
+		int cellY = Util::MapRange(GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y) / CELL_SIZE;
 
 		std::string text = "";
 		text += "Cell X: " + std::to_string(GetMouseCellX()) + "\n";
@@ -154,10 +160,12 @@ namespace GridMap {
 			text += "Slowmode: Off\n";
 		}
 
+		Debug::AddText(text);
+		//UIBackEnd::Update();
+
 		for (int x = 0; x < GetMapWidth(); x++) {
 			for (int y = 0; y < GetMapHeight(); y++) {
-				glm::ivec2 drawLocation = glm::ivec2(x * CELL_SIZE, resolutions.gBuffer.y - y * CELL_SIZE);
-
+				glm::ivec2 drawLocation = glm::ivec2(x * CELL_SIZE, y * CELL_SIZE);
 				if (IsObstacle(x, y)) {
 					renderItems.push_back(OpenGLRenderer::CreateRenderItem2D("tile_wall", drawLocation, viewportSize, Alignment::TOP_LEFT));
 				}
@@ -170,32 +178,30 @@ namespace GridMap {
 		AStar aStar = Pathfinding::GetAStar();
 
 		for (auto& cell : aStar.GetClosedList()) {
-			renderItems.push_back(CreateColoredTile(cell->x, cell->y, glm::vec3(1, 0, 0))); // RED
+			renderItems.push_back(CreateColoredTile(cell->x, cell->y, glm::vec3(0.8f, 0, 0)));
 		}
 
 		for (int i = 0; i < aStar.GetOpenList().Size(); i++) {
 			auto& cell = aStar.GetOpenList().items[i];
-			renderItems.push_back(CreateColoredTile(cell->x, cell->y, glm::vec3(0, 1, 0))); // GREEN
+			renderItems.push_back(CreateColoredTile(cell->x, cell->y, glm::vec3(0, 0.8f, 0))); 
 		}
 		for (auto& cell : aStar.GetPath()) {
-			renderItems.push_back(CreateColoredTile(cell->x, cell->y, glm::vec3(0, 0, 1))); // BLUE
+			renderItems.push_back(CreateColoredTile(cell->x, cell->y, glm::vec3(0, 0, 0.8f))); 
 		}
 
-		renderItems.push_back(CreateColoredTile(GetStartX(), GetStartY(), glm::vec3(0.164f, 0.605f, 0.765f)));
-		renderItems.push_back(CreateColoredTile(GetTargetX(), GetTargetY(), glm::vec3(0.164f, 0.605f, 0.765f)));
+		renderItems.push_back(CreateColoredTile(GetStartX(), GetStartY(), glm::vec3(1.0f, 1.0f, 0.0f)));
+		renderItems.push_back(CreateColoredTile(GetTargetX(), GetTargetY(), glm::vec3(1.0f, 0.0f, 1.0f)));
 
 		glm::ivec2 drawLocation = glm::ivec2(drawX, drawY);
 		renderItems.push_back(OpenGLRenderer::CreateRenderItem2D("selector", drawLocation, viewportSize, Alignment::TOP_LEFT));
-		//OpenGLRenderer::AddRenderItems(renderItems, TextBlitter::BlitText(text, location, viewportSize, Alignment::TOP_LEFT, BitmapFontType::STANDARD));
 
 		return renderItems;
-
 	}
 
 	RenderItem2D CreateColoredTile(int x, int y, glm::vec3 color) {
 		const Resolutions& resolutions = Config::GetResolutions();
 		glm::ivec2 viewportSize = glm::ivec2(resolutions.gBuffer.x, resolutions.gBuffer.y);
-		return OpenGLRenderer::CreateRenderItem2D("tile", { x * CELL_SIZE, resolutions.gBuffer.y - y * CELL_SIZE }, viewportSize, Alignment::TOP_LEFT, color);
+		return OpenGLRenderer::CreateRenderItem2D("tile_transparent", { x * CELL_SIZE, y * CELL_SIZE }, viewportSize, Alignment::TOP_LEFT, color);
 	}
 
 	int GetMouseX() {
@@ -242,8 +248,6 @@ namespace GridMap {
 	int GetTargetY() {
 		return g_target.y;
 	}
-
-
 }
 
 float Cell::GetF(Cell* destination) {

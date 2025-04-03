@@ -67,6 +67,16 @@ namespace AssetManager {
             texture.FreeCPUMemory();
         }
 
+        // Calculate load log text
+        text = "";
+        endIndex = AssetManager::GetLoadLog().size();
+        beginIndex = std::max(0, endIndex - maxLinesDisplayed);
+        for (int i = beginIndex; i < endIndex; i++) {
+            text += AssetManager::GetLoadLog()[i] + "\n";
+        }
+
+        UIBackEnd::BlitText(text, "REFont", 0, 0, Alignment::TOP_LEFT, 2.0f);
+
         //Renderer::InitMain();
         std::cout << "Assets loaded\n";
     }
@@ -82,8 +92,10 @@ namespace AssetManager {
             texture.SetFileInfo(fileInfo);
             texture.SetImageDataType(ImageDataType::UNCOMPRESSED);
             texture.SetTextureWrapMode(TextureWrapMode::REPEAT);
-            texture.SetMinFilter(TextureFilter::LINEAR_MIPMAP);
-            texture.SetMagFilter(TextureFilter::LINEAR);
+            texture.SetMinFilter(TextureFilter::NEAREST);
+            texture.SetMagFilter(TextureFilter::NEAREST);
+            //texture.SetMinFilter(TextureFilter::LINEAR_MIPMAP);
+            //texture.SetMagFilter(TextureFilter::LINEAR);
             //texture.RequestMipmaps();
         }
     }

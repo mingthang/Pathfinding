@@ -11,7 +11,7 @@
 
 namespace Debug {
     std::string g_text = "";
-    bool g_showDebugText = false;
+    bool g_showDebugText = true;
     DebugRenderMode g_debugRenderMode = DebugRenderMode::NONE;
 
     void UpdateDebugPointsAndLines();
@@ -24,9 +24,6 @@ namespace Debug {
 
     void UpdateDebugText() {
         if (!g_showDebugText) return;
-
-        // temporary
-        return;
 
         const Resolutions& resolutions = Config::GetResolutions();
 
@@ -69,6 +66,8 @@ namespace Debug {
             Vertex2D point = Vertex2D(Util::ScreenToNDC(glm::vec2(cell0.x * CELL_SIZE, cell0.y * CELL_SIZE), glm::vec2(resolutions.gBuffer.x, resolutions.gBuffer.y)), glm::vec4(1.0f));
             OpenGLRenderer::DrawPoint(glm::vec3(point.position, 0.0f), point.color);
         }
+
+        OpenGLRenderer::UpdateDebugMesh();
     }
 
     void EndFrame() {

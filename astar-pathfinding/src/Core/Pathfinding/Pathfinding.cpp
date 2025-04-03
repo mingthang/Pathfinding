@@ -87,7 +87,7 @@ void AStar::FindPath() {
     if (m_gridPathFound) {
         return;
     }
-    //while (!m_openList.IsEmpty()
+    //while (!m_openList.IsEmpty())
     {
         m_current = m_openList.RemoveFirst();
         if (IsDestination(m_current)) {
@@ -283,7 +283,11 @@ void MinHeap::Update(Cell* cell) {
 }
 
 bool MinHeap::Contains(Cell* cell) {
-    return (items[cell->heapIndex] == cell);
+    for (int i = 0; i < currentItemCount; ++i) {
+        if (items[i] == cell)
+            return true;
+    }
+    return false;
 }
 
 bool MinHeap::IsEmpty() {

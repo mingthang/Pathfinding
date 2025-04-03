@@ -3,9 +3,9 @@
 #include <vector>
 #include <Common/EngineTypes.h>
 
-#define CELL_SIZE 32
-#define ORTHOGONAL_COST 10
-#define DIAGONAL_COST 14
+#define CELL_SIZE 30
+#define ORTHOGONAL_COST 30
+#define DIAGONAL_COST 42
 
 struct Cell {
 	int x, y;

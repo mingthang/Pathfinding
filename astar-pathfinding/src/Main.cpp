@@ -7,7 +7,7 @@
 int main()
 {
 
-	if (!BackEnd::Init(WindowedMode::FULLSCREEN)) {
+	if (!BackEnd::Init(WindowedMode::WINDOWED)) {
 		std::cout << "BankEnd::Init() FAILED.\n";
 		return -1;
 	}

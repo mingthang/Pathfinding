@@ -49,13 +49,15 @@ namespace OpenGLRenderer {
 
 		ClearRenderTargets();
 
-		GridPass();
-		DebugPass();
-
 		OpenGLFrameBuffer& gBuffer = g_frameBuffers["GBuffer"];
 		OpenGLFrameBuffer& finalImageBuffer = g_frameBuffers["FinalImage"];
 
+		GridPass();
+		DebugPass();
+
+		// Blit gBuffer -> finalImageBuffer
 		OpenGLRenderer::BlitFrameBuffer(&gBuffer, &finalImageBuffer, "BaseColor", "Color", GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		// Blit finalImageBuffer -> default framebuffer
 		OpenGLRenderer::BlitToDefaultFrameBuffer(&finalImageBuffer, "Color", GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 		UIPass();
@@ -63,13 +65,17 @@ namespace OpenGLRenderer {
 
 	void ClearRenderTargets() {
 		OpenGLFrameBuffer* gBuffer = GetFrameBuffer("GBuffer");
-
+		OpenGLFrameBuffer* finalImageBuffer = GetFrameBuffer("FinalImage");
+		
 		// GBuffer
 		glDepthMask(GL_TRUE);
 		gBuffer->ClearAttachment("BaseColor", 0.0f, 0.0f, 0.0f, 1.0f);
 		gBuffer->ClearDepthAttachment();
+
+		finalImageBuffer->ClearAttachment("Color", 0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
+	// Indirect Rendering (TODO)
 	void MultiDrawIndirect(const std::vector<DrawIndexedIndirectCommand>& commands) {
 		if (commands.size()) {
 			// Feed the draw command data to the gpu
@@ -90,5 +96,4 @@ namespace OpenGLRenderer {
 		auto it = g_frameBuffers.find(name);
 		return (it != g_frameBuffers.end()) ? &it->second : nullptr;
 	}
-
 }
