@@ -1,6 +1,6 @@
 # Pathfinding
 
-A sanbox based on OpenGL, showcasing the implementation of pathfinding algorithms (A* pathfinding for now), used to find optimal paths on a grid-based map while considering obstacles, movement costs, and search heuristics.
+A sandbox based on a simple OpenGL game engine, showcasing the implementation of pathfinding algorithms (currently only A* pathfinding, with potential additions in the future). It finds optimal paths on a grid-based map while considering obstacles, movement costs, and search heuristics.
 
 ## Showcase
 <p align="center">
