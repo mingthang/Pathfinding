@@ -18,6 +18,8 @@ namespace GridMap {
 	glm::ivec2 g_target;
 	std::vector<std::vector<bool>> g_map;
 
+	std::vector<RenderItem2D> renderItems;
+
 	void Init() {
 		const Resolutions& resolutions = Config::GetResolutions();
 
@@ -78,12 +80,21 @@ namespace GridMap {
 		if (Input::KeyPressed(KEY_W) || Input::KeyPressed(KEY_E)) {
 			Audio::PlayAudio("SELECT.wav", 1.0);
 		}
-		if (Input::KeyDown(KEY_W) && !Pathfinding::GetAStar().SmoothPathFound() || Input::KeyPressed(KEY_E)) {
+		if ((Input::KeyDown(KEY_W) || Input::KeyPressed(KEY_E)) && !Pathfinding::GetAStar().SmoothPathFound()) {
 			Audio::PlayAudio("UI_Select.wav", 0.5);
-			if (!Pathfinding::GetAStar().SmoothPathFound()) {
-				Pathfinding::GetAStar().FindSmoothPath();
-			}
+			bool useSlowMode = Input::KeyDown(KEY_W); // W slow, E fast 
+			bool slowModeEnabled = Pathfinding::SlowModeEnabled();
+
+			if (useSlowMode && !slowModeEnabled) Pathfinding::ToggleSlowMode();
+			if (!useSlowMode && slowModeEnabled) Pathfinding::ToggleSlowMode();
+
+			Pathfinding::GetAStar().FindSmoothPath();
+
+			if (useSlowMode && !slowModeEnabled) Pathfinding::ToggleSlowMode();
+			if (!useSlowMode && slowModeEnabled) Pathfinding::ToggleSlowMode();
 		}
+
+		UpdateGridRenderItems();
 	}
 
 	void ClearMap() {
@@ -138,21 +149,25 @@ namespace GridMap {
 		glm::ivec2 viewportSize = glm::ivec2(resolutions.gBuffer.x, resolutions.gBuffer.y);
 		std::vector<RenderItem2D> renderItems;
 
-		int drawX = Util::MapRange(GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x);
-		int drawY = Util::MapRange(GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y);
+		//int drawX = Util::MapRange(GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x);
+		//int drawY = Util::MapRange(GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y);
+		int drawX = (GetMouseX() / CELL_SIZE) * CELL_SIZE;
+		int drawY = (GetMouseY() / CELL_SIZE) * CELL_SIZE;
 		drawX /= CELL_SIZE;
 		drawY /= CELL_SIZE;
 		drawX *= CELL_SIZE;
 		drawY *= CELL_SIZE;
 
-		int cellX = Util::MapRange(GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x) / CELL_SIZE;
-		int cellY = Util::MapRange(GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y) / CELL_SIZE;
+		//int cellX = Util::MapRange(GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x) / CELL_SIZE;
+		//int cellY = Util::MapRange(GetMouseY(), 0, BackEnd::GetCurrentWindowHeight(), 0, resolutions.gBuffer.y) / CELL_SIZE;
+		int cellX = GetMouseX() / CELL_SIZE;
+		int cellY = GetMouseY() / CELL_SIZE;
 
-		std::string text = "";
+		std::string text = "\n";
 		text += "Cell X: " + std::to_string(GetMouseCellX()) + "\n";
 		text += "Cell Y: " + std::to_string(GetMouseCellY()) + "\n";
-		text += "Mouse X: " + std::to_string(GetMouseX()) + "\n";
-		text += "Mouse Y: " + std::to_string(GetMouseY()) + "\n";
+		text += "Grid Mouse X: " + std::to_string(GetMouseX()) + "\n";
+		text += "Grid Mouse Y: " + std::to_string(GetMouseY()) + "\n";
 		if (Pathfinding::SlowModeEnabled()) {
 			text += "Slowmode: On\n";
 		}
@@ -161,7 +176,6 @@ namespace GridMap {
 		}
 
 		Debug::AddText(text);
-		//UIBackEnd::Update();
 
 		for (int x = 0; x < GetMapWidth(); x++) {
 			for (int y = 0; y < GetMapHeight(); y++) {
@@ -204,9 +218,13 @@ namespace GridMap {
 		return OpenGLRenderer::CreateRenderItem2D("tile_transparent", { x * CELL_SIZE, y * CELL_SIZE }, viewportSize, Alignment::TOP_LEFT, color);
 	}
 
+	void UpdateGridRenderItems() {
+		renderItems = CreateRenderItems2D();
+	}
+
 	int GetMouseX() {
 		const Resolutions& resolutions = Config::GetResolutions();
-		float scalingRatio = BackEnd::GetCurrentWindowWidth() / resolutions.gBuffer.x;
+		//float scalingRatio = BackEnd::GetCurrentWindowWidth() / resolutions.gBuffer.x;
 		return Util::MapRange(Input::GetMouseX(), 0, BackEnd::GetCurrentWindowWidth(), 0, resolutions.gBuffer.x);
 	}
 

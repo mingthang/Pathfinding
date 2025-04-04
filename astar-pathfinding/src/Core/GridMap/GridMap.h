@@ -33,6 +33,7 @@ namespace GridMap {
 
 	std::vector<RenderItem2D> CreateRenderItems2D();
 	RenderItem2D CreateColoredTile(int x, int y, glm::vec3 color);
+	void UpdateGridRenderItems();
 
 	int GetMouseX();
 	int GetMouseY();
