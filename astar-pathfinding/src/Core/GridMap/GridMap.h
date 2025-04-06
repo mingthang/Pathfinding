@@ -31,9 +31,11 @@ namespace GridMap {
 	bool IsInBounds(int x, int y);
 	bool IsObstacle(int x, int y);
 
-	std::vector<RenderItem2D> CreateRenderItems2D();
 	RenderItem2D CreateColoredTile(int x, int y, glm::vec3 color);
 	void UpdateGridRenderItems();
+	void UpdateDebugGridText();
+	void UpdateGridLayer();
+	void UpdatePathLayer();
 
 	int GetMouseX();
 	int GetMouseY();
@@ -45,4 +47,7 @@ namespace GridMap {
 	int GetStartY();
 	int GetTargetX();
 	int GetTargetY();
+	const std::vector<RenderItem2D>& GetGridLayer();
+	const std::vector<RenderItem2D>& GetPathLayer();
+	const std::vector<RenderItem2D>& GetSelectorLayer();
 }
