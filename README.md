@@ -16,9 +16,9 @@ A sandbox based on a simple OpenGL game engine, showcasing the implementation of
 - **Q Key**: Toggle slow mode.
 - **Spacebar (Pressed/Hold)**: Begin pathfinding search.
 - **W Key**: Smooth the found path.
-- **E Key**: Smooth the path (slow mode version).
+- **E Key**: Smooth the found path (slow mode version).
 - **` Key**: Toggle debug text mode.
-
+- **G Key**: Toggle windowed/fullscreen mode.
 
 ## Third Party Libraries Used
 ### GLFW
